@@ -1,7 +1,5 @@
-function getWorld()
-{
-    return {
-        rooms : [
+
+let roomMaster = [
             {
                 "Name" : "Room 1",
                 "Description": "Lorum Lipsom",
@@ -10,9 +8,6 @@ function getWorld()
                 "South" : "Room 4",
 
             },
-
-
-
         ]
-    };
-}
+
+export default roomMaster;

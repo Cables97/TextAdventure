@@ -1,12 +1,13 @@
 :root{
   --background: black;
+  --text-main: silver;
+  --text-secondary: #555;
 }
 
 *{
   font-family: 'Quicksand', sans-serif;
   font-family: 'Ubuntu Mono', monospace;
   font-size: 16px;
-  color: silver;
   box-sizing: border-box;
   margin: 0;
   border: 0;
@@ -24,7 +25,8 @@ html, body{
 .container{
   margin: auto;
   border: .25em solid blue;
-  width: 70vh;
+  width: 70vw;
+
 }
 
 .consoleColour{
@@ -36,10 +38,24 @@ html, body{
 }
 
 
+.important{
+  font-weight: bold;
+  color: aquamarine;
+}
+
 
 #outputcontainer{
   height: 90vh;
   border: .25em solid red;
+  color: var(--text-main);
+  overflow-x: hidden; 
+  overflow-anchor: none;
+  overflow: auto;
+
+}
+
+#anchor {
+  overflow-anchor: auto;
 }
 
 #statusBar{
@@ -50,13 +66,14 @@ html, body{
   justify-content: space-between;
   background-color: black;
   border: 1px solid grey;
+  color: var(--text-secondary);
 
 }
 
 #console{
   position: absolute;
   bottom:0;
-  width:70vh;
+  width:70vw;
   border: .25em solid blue;
 }
 
@@ -66,15 +83,16 @@ html, body{
   grid-template-columns: 18px auto;
   grid-gap: .25em;
   align-items: center;
+  color: var(--text-main);
 }
 
 #input{
-  color: white;
+  color: var(--text-main);
   outline: 0;
 }
 
 #inputMessage{
-  color: grey;
+  color: var(--text-secondary);
 }
 
 

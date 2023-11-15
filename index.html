@@ -2,9 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>TextAdventure App</title>
+    <title>TextAdventure</title>
     <link rel="stylesheet" href="./src/index.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,18 +14,19 @@
 
     <div class="container">
 
-      <div id='outputcontainer' class="globalPadding">
-        <div id="statusBar">
+      <div id="statusBar">
           <div id="roomTitle">Starting Room</div>
           <div id="score">score: 00</div>
-        </div>
-
-
-        <h1>Output box</h1>
-        <p>line 1</p>
-
       </div>
 
+      <div id="wrapper">
+        <div id='outputcontainer' class="globalPadding">
+          
+          <div id='anchor'><p>anchor placeholder</p></div>
+          
+
+        </div>
+      </div>
 
       <div id='console' id="inputcontainer">
 
@@ -34,7 +34,7 @@
           <div>>></div>
           <input id="input" type="text" class="consoleColour" placeholder="Type a command..." autocomplete="off"></input>
           <div>&nbsp;</div>
-          <div id="inputMessage">ConsoleMessage</div>
+          <div id="inputMessage">Console <span class="important">Message</span></div>
         </div>
 
       </div>
