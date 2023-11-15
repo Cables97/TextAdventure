@@ -1,5 +1,5 @@
 # TextAdventure
- personal project 1 - react text adventure
+ personal project 1 - text adventure
 
  created by Caleb 'Cables' Universe. november 2023.
 
