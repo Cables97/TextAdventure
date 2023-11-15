@@ -1,20 +1,8 @@
-
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload. 
-        </p>
-        <form>
-          <input type="text" id="inputString" placeholder="enter text here" size="20"></input>
-        </form>
-      </header>
-    </div>
-  );
-}
+const ui = require("UI");
+const definitions = require("Rooms");
+
 
 
 /* 
@@ -44,7 +32,7 @@ input.addEventListener("keydown", function (e) {
 
 
 
-playerController("Lorum Lipsum");
+playerController(input);
 
  function playerController(input){
 
@@ -165,6 +153,3 @@ function printLine(){
 }
 
 
-
-
-export default App;
