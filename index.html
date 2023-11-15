@@ -5,21 +5,44 @@
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>TextAdventure App</title>
+    <link rel="stylesheet" href="./src/index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&family=Ubuntu+Mono&display=swap" rel="stylesheet">
   </head>
   <body>
-    <div></div>
 
-    <h1>Caleb's app</h1>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+    <div class="container">
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+      <div id='outputcontainer' class="globalPadding">
+        <div id="statusBar">
+          <div id="roomTitle">Starting Room</div>
+          <div id="score">score: 00</div>
+        </div>
+
+
+        <h1>Output box</h1>
+        <p>line 1</p>
+
+      </div>
+
+
+      <div id='console' id="inputcontainer">
+
+        <div id="consoleGrid" class="consoleColour globalPadding">
+          <div>>></div>
+          <input id="input" type="text" class="consoleColour" placeholder="Type a command..." autocomplete="off"></input>
+          <div>&nbsp;</div>
+          <div id="inputMessage">ConsoleMessage</div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <script src="./src/App.js"></script>
+    <script src="./src/Rooms.js"></script>
+
   </body>
 </html>

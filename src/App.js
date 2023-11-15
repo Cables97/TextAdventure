@@ -4,8 +4,86 @@ const ui = require("UI");
 const definitions = require("Rooms");
 
 
+const bagSize = 2;
 
-/* 
+var world;
+var bag;
+var room;
+
+function enter()
+{
+    ui.createUI();
+    startGame();
+}
+
+
+
+
+function startGame()
+{
+    ui.clear();
+    
+    world = definitions.getWorld();
+    bag = [];
+
+    handleHelp();
+    enterRoom("Living room");
+}
+
+
+
+
+function keyPressed()
+{
+    ui.checkCommand(keyCode, handleInput);
+}
+
+
+
+
+function handleInput(s)
+{
+    if (!s)
+        return;
+        
+    var ar = s.split(" ");
+    if (ar.length === 0)
+        return;
+
+    ui.println("> " + s);
+
+    var cmd = ar[0].toLowerCase();
+    ar.shift();
+    
+    switch(cmd)
+    {
+        case "new":
+            startGame();
+            break;
+        case "help":
+            handleHelp();
+            break;
+        case "look":
+            handleLook();
+            break;
+        case "go":
+            handleGo(ar);
+            break;
+        case "grab":
+            handleGrab(ar);
+            break;
+        case "drop":
+            handleDrop(ar);
+            break;
+        case "bag":
+            handleBag();
+            break;
+    }
+}
+
+
+
+
 (direction) - move player to next room. direction argument changes the room to matching key-value (eg, north : "room2") (go/move optional)
 look - reprints room description
 take (item) - add availible item in room to inventory, delete key-value from room
@@ -13,7 +91,7 @@ drop (item) - add item key-value to room, remove from inventory
 equip (item) - add item to equipped value
 attack (enemy) - attacks enemy with equipped item
 this is god - debug mode (shows print.logs) 
-*/
+
 
 //event on enter, takes text in input box and passes it as playerController(input).
 
@@ -145,11 +223,27 @@ function debugMode(){
 
 function controlHelp(){
   //print controls to game
+  function handleHelp()
+{
+    printLine("Welcome to 'Escape the lab' adventure game\n");
+    printLine("Available commands\n");
+    printLine("new             - Start a new game");
+    printLine("help            - Display this help information");
+    printLine("look            - Look in the room");
+    printLine("go direction    - Go in the specified direction. Read room description to understand where you can go.");
+    printLine("grab object     - Grab specified object from the room");
+    printLine("drop object     - Drop specified object from the bag");
+    printLine("bag             - Shows the content of the bag");
+    
+    printLine("");
+}
 }
 
 
-function printLine(){
-  //print line above text box
+function printLine(arg){
+  //add arg to <p>{arg}</p> to Output Div
+
 }
+
 
 

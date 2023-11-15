@@ -1,39 +1,95 @@
-.App {
-  text-align: center;
-  background-color: black;
+:root{
+  --background: black;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+*{
+  font-family: 'Quicksand', sans-serif;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 16px;
+  color: silver;
+  box-sizing: border-box;
+  margin: 0;
+  border: 0;
+  padding: 0;
+
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+
+
+
+html, body{
+  background-color: var(--background);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+.container{
+  margin: auto;
+  border: .25em solid blue;
+  width: 70vh;
+}
+
+.consoleColour{
+  background-color: var(--background);
+}
+
+.globalPadding{
+  padding: .5em;
+}
+
+
+
+#outputcontainer{
+  height: 90vh;
+  border: .25em solid red;
+}
+
+#statusBar{
+  padding:5px;
+  display:flex;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: black;
+  justify-content: space-between;
+  background-color: black;
+  border: 1px solid grey;
+
 }
 
-.App-link {
-  color: black;
+#console{
+  position: absolute;
+  bottom:0;
+  width:70vh;
+  border: .25em solid blue;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+#consoleGrid{
+  display: grid;
+  grid-template-columns: 18px auto;
+  grid-gap: .25em;
+  align-items: center;
 }
+
+#input{
+  color: white;
+  outline: 0;
+}
+
+#inputMessage{
+  color: grey;
+}
+
+
+
+
+@media (max-width:961px)  { /* tablet, landscape iPad, lo-res laptops ands desktops */ 
+  .container{
+    width: 100vw;
+
+  }
+  #console{
+
+    width:100vw;
+
+  }
+
+}
+
