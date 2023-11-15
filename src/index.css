@@ -29,6 +29,9 @@ html, body{
 
 }
 
+
+
+
 .consoleColour{
   background-color: var(--background);
 }
@@ -53,6 +56,17 @@ html, body{
   overflow: auto;
 
 }
+
+#outputcontainer > p{
+  display:block;
+  text-align: left;
+  padding: .15em;
+}
+#outputcontainer > p > .debug{
+  color: purple;
+}
+
+
 
 #anchor {
   overflow-anchor: auto;

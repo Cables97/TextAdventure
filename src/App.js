@@ -24,13 +24,11 @@ let dummyCommandCount = 0;
 
 let currentRoom ={
   title: "Room1",
-  desc: "You find yourself in a damp room, a lantern by your feet throws a dim light against the walls" +
-  "line2",
+  desc: "You find yourself in a damp room, a <span class='important'>lantern</span> by your feet throws a dim light against the walls",
   items: ["item1", "item2"],
   east: "Room2",
   west: "Room3",
-  north: "Blocked",
-  south: "Blocked"
+
 }
 
 //----------------------------------------------- 
@@ -279,7 +277,7 @@ function controlMove(dir){
 }
 
 function controlLook(){
-
+  renderRoom();
 }
 
 function controlTake(){
