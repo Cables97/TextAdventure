@@ -1,7 +1,9 @@
-import {roomMaster, enemyMaster} from './modules/Rooms.js'
-
+import {roomMaster, enemyMaster, itemMaster} from './modules/Rooms.js'
+//------------------------------------------------
 //Constants
-const enemyBank = enemyMaster
+//------------------------------------------------
+const enemyBank = enemyMaster;
+const itemBank = itemMaster;
 
 //----------------------------------------------- 
 //DOM Variables
@@ -17,15 +19,18 @@ const domAnchor = document.getElementById("anchor");
 //Game Variables
 //----------------------------------------------- 
 let world = [];
-let bag = [];
-
+let currentEnemy = '';
+let previousEnemyArr = []; 
+let currentRoom ={};
 
 let boolDebug = false;
+
 let score = 0;
 let dummyCommandCount = 0;
+
+let bag = [];
 let equippedItem = [];
-let currentEnemy = '';
-let currentRoom ={};
+
 
 //----------------------------------------------- 
 //Event Functions
@@ -97,6 +102,33 @@ function findRoom(roomName)
     return null;
 }
 
+function findItem(itemName)
+{
+  console.log(itemBank);
+    for(var r of itemBank)
+    {
+        if (r.name === itemName)
+            return r;
+    }
+    
+    return null;
+}
+
+function findEnemy(enemyName)
+{
+  console.log(enemyBank);
+    for(var r of enemyBank)
+    {
+        if (r.name === enemyName)
+            return r;
+    }
+    
+    return null;
+}
+
+
+
+
 //prints room Description
 function printRoom(){
 
@@ -118,11 +150,11 @@ function printRoom(){
   //prints if enemy in the room
   if('enemy' in currentRoom){
     if(currentRoom.enemy[2] == true){
-      currentEnemy = currentRoom.enemy[0];
+      mountEnemy(currentRoom.enemy[0]);
       printLine(currentRoom.enemy[1]);
     } else {
         printLine(currentRoom.enemy[3]);
-        currentEnemy = '';
+        unmountEnemy() 
     }
   }
 
@@ -137,6 +169,7 @@ function printRoom(){
   printLine('');
 
 }
+
 /*
 (direction) - move player to next room. direction argument changes the room to matching key-value (eg, north : "room2") (go/move optional)
 look - reprints room description
@@ -238,9 +271,11 @@ function playerController(input){
 
       default: 
           if(dummyCommandCount === 3){
+            printLine('Please input an acceptable command');
             consoleMsg("You're being silly");
             dummyCommandCount++;
           } else if ( dummyCommandCount === 5){
+            printLine('Please input an acceptable command');
             consoleMsg('I can not tell if you are dumb or forgot how to play');
             dummyCommandCount++;
           } else if ( dummyCommandCount > 6){
@@ -343,13 +378,21 @@ function controlTake(inputArg){
   let roomItems = currentRoom.items;
 
   if (roomItems.includes(inputArg)){
+    //let i = findRoom(currentRoom.title);
     bag.push(inputArg);
     let x = currentRoom.items.indexOf(inputArg);
     currentRoom.items.splice(x,1);
+
     printLine('You now have ' + bag + " in your bag");
     (boolDebug) ? console.log('bag items= ' + bag) : null;
     (boolDebug) ? console.log('room items= ' + roomItems) : null;
     scoreInc(10);
+
+
+
+
+
+
   }else{
     printLine('No item found with that name')
   }
@@ -412,9 +455,33 @@ function printBag(){
   }
 }
 
+function mountEnemy(enemy){
+  let r = findEnemy(enemy);
+    
+  if (!r)
+    {
+      printLine("Cannot find enemy " + enemy);
+        return;
+    }
+    
+    currentEnemy = r;
 
-function controlAttack(){
 }
+
+function unmountEnemy() {
+  currentEnemy = "";
+}
+
+
+
+
+function controlAttack(inputArg){
+ if(inputArg == currentEnemy){
+
+ }
+
+}
+
 
 function debugMode(){
   if(!boolDebug){

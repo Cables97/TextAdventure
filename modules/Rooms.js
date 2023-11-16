@@ -27,7 +27,7 @@ let roomMaster = [
         items: ["lamp", "item2"],
         east: "Room2",
         west: "Room3",
-        enemy: ['enemyName', 'A large orc stands facing the wall', true, 'An orc lays bleeding and dead on the floor'] 
+        enemy: ['Orc', 'A large orc stands facing the wall', true, 'An orc lays bleeding and dead on the floor'] 
     
     },
     {
@@ -63,7 +63,8 @@ let enemyMaster = [
         name: "Orc",
         health: 4,
         damage: 1,
-        reward: ['chain'], 
+        reward: ['chain'],
+        killMsg: "The Orc swings it's giant club at your face surprisingly fast" 
     },
     {
         name: "Dog",
@@ -82,6 +83,28 @@ let enemyMaster = [
 
 ]
     
+let itemMaster = [
+    {
+        name: "lamp",
+        damage: 1,
+        atkMsg: 'Sparks fly as your lamp collides with ', 
+        value: 20
+    },
+    {
+        name: "sword",
+        damage: 4,
+        atkMsg: 'You swing, and the blade slices through the flesh of the ', 
+        value: 20
+    },
+    {
+        name: "key",
+        damage: 0,
+        atkMsg: 'Sparks fly as your lamp collides with ', 
+        value: 20 
+    },
 
 
-export {roomMaster, enemyMaster};
+
+]
+
+export {roomMaster, enemyMaster, itemMaster};
