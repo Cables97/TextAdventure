@@ -28,6 +28,7 @@ html, body{
   border: .25px solid var(--text-secondary);
   min-width: 450px;
   width: var(--width);
+  height: 100vh;
 
 }
 
@@ -50,7 +51,7 @@ html, body{
 
 
 #outputcontainer{
-  height: 90vh;
+  height: calc(100vh - 6em);
   border: .25px solid var(--text-secondary);
   color: var(--text-main);
   overflow-x: hidden; 
@@ -87,7 +88,8 @@ html, body{
 }
 
 #console{
-  position: absolute;
+  position: fixed;
+  height: 4em;
   bottom:0;
   width:var(--width);
   border: .25px solid var(--text-secondary);

@@ -1,6 +1,7 @@
-import {roomMaster} from './modules/Rooms.js'
+import {roomMaster, enemyMaster} from './modules/Rooms.js'
 
 //Constants
+const enemyBank = enemyMaster
 
 //----------------------------------------------- 
 //DOM Variables
@@ -17,6 +18,7 @@ const domAnchor = document.getElementById("anchor");
 //----------------------------------------------- 
 let world = [];
 let bag = [];
+
 
 let boolDebug = false;
 let score = 0;
@@ -291,8 +293,6 @@ function scoreInc(num){
     domScoreElem.innerHTML = score;
   }
 }
-
-
 
 function printIntro(){
   printLine("Welcome to Cable's adventure game");

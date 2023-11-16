@@ -38,7 +38,7 @@ let roomMaster = [
         items: ["lamp", "item2"],
         east: "Room3",
         west: "StartingRoom",
-        enemy: ['enemyName', 'desc1', false, 'desc2'] 
+        
     },
     {
         title: "Room3",
@@ -48,7 +48,7 @@ let roomMaster = [
         items: ["lamp", "item2"],
         east: "Room1",
         west: "StartingRoom",
-        enemy: ['enemyName', 'desc1', false, 'desc2'] 
+        
     },
 
 
@@ -84,4 +84,4 @@ let enemyMaster = [
     
 
 
-export {roomMaster};
+export {roomMaster, enemyMaster};
