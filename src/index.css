@@ -2,6 +2,7 @@
   --background: black;
   --text-main: silver;
   --text-secondary: #555;
+  --width: 60vw;
 }
 
 *{
@@ -25,7 +26,8 @@ html, body{
 .container{
   margin: auto;
   border: .25em solid blue;
-  width: 70vw;
+  min-width: 450px;
+  width: var(--width);
 
 }
 
@@ -87,7 +89,7 @@ html, body{
 #console{
   position: absolute;
   bottom:0;
-  width:70vw;
+  width:var(--width);
   border: .25em solid blue;
 }
 
@@ -113,14 +115,8 @@ html, body{
 
 
 @media (max-width:961px)  { /* tablet, landscape iPad, lo-res laptops ands desktops */ 
-  .container{
-    width: 100vw;
-
-  }
-  #console{
-
-    width:100vw;
-
+  :root{
+    --width: 100vw;
   }
 
 }

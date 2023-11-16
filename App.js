@@ -5,31 +5,28 @@ import {roomMaster} from './modules/Rooms.js'
 //----------------------------------------------- 
 //DOM Variables
 //----------------------------------------------- 
-let outputBox = document.getElementById("outputcontainer");
-let roomTitle = document.getElementById("roomTitle");
-let scoreElem = document.getElementById("score");
-let inputField = document.getElementById("input");
-let consoleMessage = document.getElementById("inputMessage");
-let anchor = document.getElementById("anchor");
+const domOutputBox = document.getElementById("outputcontainer");
+const domRoomTitle = document.getElementById("roomTitle");
+const domScoreElem = document.getElementById("score");
+const domInputField = document.getElementById("input");
+const domConsoleMessage = document.getElementById("inputMessage");
+const domAnchor = document.getElementById("anchor");
 
 //----------------------------------------------- 
 //Game Variables
 //----------------------------------------------- 
-let world = " ";
-let bag;
+let world = [];
+let bag = [];
 
+let boolDebug = false;
 let score=0;
 let dummyCommandCount = 0;
+let equippedItem = [];
 
 
 let currentRoom ={
-  title: "Room1",
-  desc: "You find yourself in a damp room, a <span class='important'>lantern</span> by your feet throws a dim light against the walls",
-  items: ["item1", "item2"],
-  east: "Room2",
-  west: "Room3",
 
-}
+};
 
 //----------------------------------------------- 
 //Event Functions
@@ -39,7 +36,8 @@ window.onload = (event) => {
 };
 
 function startGame(){
-  displayHelp();
+  printIntro();
+  printHelp();
   world = roomMaster;
   bag = [];
   enterRoom("Room1");
@@ -47,21 +45,18 @@ function startGame(){
 }
 
 //event on enter listener, takes text in input box and passes it as playerController(input).
-inputField.addEventListener("keydown", function (e) {
+domInputField.addEventListener("keydown", function (e) {
   if (e.code === 'Enter') {
-      //press enter
-      //checks the typed command against playerController
-      //player controller changes the current room.
-      //print new room
     userInput();
   }
 });
 
+//parses user command, passes it to userCommand
 function userInput(){
-  let userCommand = inputField.value.toLowerCase();
+  let userCommand = domInputField.value.toLowerCase();
   console.log("userCommand= " + userCommand)
-  inputField.value = ""
-  printLine("> " + userCommand);
+  domInputField.value = ""
+  printLine(userCommand);
   playerController(userCommand);
 }
 
@@ -70,7 +65,7 @@ function userInput(){
 //----------------------------------------------- 
 //Game Functions
 //----------------------------------------------- 
-
+//Checks if the room that the currentRoom points to exists. If not, cannot find room. PLAYER SHOULD NEVER SEE CANNOT FIND ROOM
 function enterRoom(roomName)
 {
     let r = findRoom(roomName);
@@ -82,18 +77,24 @@ function enterRoom(roomName)
     
     currentRoom = r;
 
-    printRoom(room);
-    roomName(room.title);
-    renderRoom();
+    printRoom(currentRoom);
+    updateRoomName(currentRoom.title);
+}
+//print a line on the output
+function printLine(msg){
+
+  const para = document.createElement("p");
+  domOutputBox.appendChild(para);
+  domOutputBox.lastChild.innerHTML = '> ' + msg;
 }
 
-
-
+//checks if the room is in world list. Returns availible room by name.
 function findRoom(roomName)
 {
+  console.log(world);
     for(var r of world)
     {
-        if (r.Name === roomName)
+        if (r.title === roomName)
             return r;
     }
     
@@ -120,12 +121,12 @@ function playerController(input){
     let inputArray = inputstr.split(/\s+/);
   
     let inputCommand = inputArray[0];
-    console.log("input command= " + inputCommand);
+    //console.log("input command= " + inputCommand);
   
     let inputArg = inputArray[1];
-    console.log("input argument= " + inputArg);
+    //console.log("input argument= " + inputArg);
   
-    console.log("dummyCommandCount= " + dummyCommandCount);
+    //console.log("dummyCommandCount= " + dummyCommandCount);
   
     switch(inputCommand) {
         //All player commands go within this switch statement. Simplify as much as possible. KISS.
@@ -188,19 +189,28 @@ function playerController(input){
       case 'thisisgod':
         debugMode();
       break;
-  
+
+      case 'bag':
+        printBag();
+        dummyCommandCount = 0;
+      break;
+
+      case 'newgame':
+        startGame();
+      break;
+
       default: 
           if(dummyCommandCount === 3){
-            consoleMsg("> You're being silly");
+            consoleMsg("You're being silly");
             dummyCommandCount++;
           } else if ( dummyCommandCount === 5){
-            consoleMsg('> I can not tell if you are dumb or forgot how to play');
+            consoleMsg('I can not tell if you are dumb or forgot how to play');
             dummyCommandCount++;
           } else if ( dummyCommandCount > 6){
-            displayHelp();
+            printHelp();
             dummyCommandCount = 0;
           } else {
-            printLine('> Please input an acceptable command');
+            printLine('Please input an acceptable command');
             dummyCommandCount++;
           }
         break;
@@ -214,41 +224,87 @@ function playerController(input){
 //Basic Functions
 //----------------------------------------------- 
 
-//print a line on the output
-function printLine(msg){
 
-  const para = document.createElement("p");
-  const element = document.getElementById("outputcontainer");
-  element.appendChild(para);
-  element.lastChild.innerHTML = msg;
-}
+
 //changes message bellow user input
 function consoleMsg(msg){
-  consoleMessage.innerHTML = msg;
+  domConsoleMessage.innerHTML = msg;
 }
 
 //changes the name displayed in the top left corner
-function roomName(name){
-  roomTitle.innerHTML = name;
+function updateRoomName(name){
+  domRoomTitle.innerHTML = name;
 }
 
 //scorechanger function, num determines score change. Displayed in top right corner
 function scoreInc(num){
   if(num > 1){
     score = score + num;
-    scoreElem.innerHTML = "score: " + score;
+    domScoreElem.innerHTML = "score: " + score;
     
   } else if (num == 0){
     score = 0;
-    scoreElem.innerHTML = "score: " + score;
+    domScoreElem.innerHTML = "score: " + score;
   } else {
-    scoreElem = score;
+    domScoreElem.innerHTML = score;
   }
 }
+
 //prints room Description
-function renderRoom(){
-  printLine(currentRoom.desc);
+function printRoom(){
+  
+  printLine('');
+  //prints the desc that matches the index of the first array value
+  let i = currentRoom.desc[0];
+  printLine(currentRoom.desc[i])
+
+    // if desc2 is 'on', prints the desc that matches the index of the first array value
+  if(currentRoom.desc2[0] == 1){
+    printLine(currentRoom.desc2[i])
+  } 
+  else if (currentRoom.desc2[0] == 2){
+    printLine(currentRoom.desc2[i])
+  }
+
+  (boolDebug) ? console.log(currentRoom.desc[1]) : null;
+  (boolDebug) ? console.log(currentRoom.desc2[1]) : null;
+  (boolDebug) ? console.log(currentRoom.desc[2]) : null;
+  (boolDebug) ? console.log(currentRoom.desc2[2]) : null;
+
+
+
+ 
+  printLine('');
 }
+
+function printIntro(){
+  printLine("Welcome to Cable's adventure game\n");
+}
+
+
+function printHelp(){
+  //print controls to game
+    
+  printLine("Available commands\n");
+  printLine("<span class='important'>new</span>             - Start a new game");
+  printLine("<span class='important'>help</span>            - Display this help information");
+  printLine("<span class='important'>look</span>            - Look in the room");
+  printLine("<span class='important'>(go) n/s/w/n</span>    - Go in the specified direction. Read room description to understand where you can go.");
+  printLine("<span class='important'>grab object</span>     - Grab specified object from the room");
+  printLine("<span class='important'>drop object</span>     - Drop specified object from the bag");
+  printLine("<span class='important'>bag</span>             - Shows the content of the bag");
+  printLine("");
+
+}
+
+
+
+
+
+//----------------------------------------------- 
+//Character Functions
+//----------------------------------------------- 
+
 
 function controlMove(dir){
   let newroom = currentRoom[dir];
@@ -263,50 +319,95 @@ function controlMove(dir){
 }
 
 function controlLook(){
-  renderRoom();
+  printRoom();
 }
 
 function controlTake(inputArg){
-  let roomItems = currentRoom[items];
+  let roomItems = currentRoom.items;
+
   if (roomItems.includes(inputArg)){
     bag.push(inputArg);
-    let x = currentRoom.items.findIndex(inputArg);
+    let x = currentRoom.items.indexOf(inputArg);
     currentRoom.items.splice(x,1);
+    printLine('You now have ' + bag + " in your bag");
+    (boolDebug) ? console.log('bag items= ' + bag) : null;
+    (boolDebug) ? console.log('room items= ' + roomItems) : null;
+
+  }else{
+    printLine('No item found with that name')
   }
 
 }
 
-function controlDrop(){
+function controlDrop(inputArg){
+  let roomItems = currentRoom.items;
+
+  if (bag.includes(inputArg)){
+    roomItems.push(inputArg);
+    let x = bag.indexOf(inputArg);
+    bag.splice(x,1);
+    printLine('You have dropped ' + inputArg + " it is no longer in your bag");
+    (boolDebug) ? console.log('bag items= ' +bag): null;
+    (boolDebug) ? console.log('room items= ' +roomItems): null;
+
+    if (inputArg == equippedItem[0]){
+      equippedItem.pop();
+      printLine("You have dropped your equipped " + inputArg);      
+    }
+
+  }else{
+    printLine('No item found with that name')
+  }
+}
+
+function controlEquip(inputArg){
+  //check if in bag, if not, 
+  if (bag.includes(inputArg)){
+    
+    if (equippedItem.length == 0){
+      equippedItem.push(inputArg)
+      printLine("You have equipped your " + inputArg)
+      (boolDebug) ? console.log("equipped item " + equippedItem[0]) : null;
+    } else if(equippedItem.length == 1){
+      equippedItem.pop();
+      equippedItem.push(inputArg);
+      printLine("You already have something equipped...   " + equippedItem + " equipped instead")
+    }
+  }else {
+    printLine("You dont have anything by the name of " + inputArg + " in your bag")
+
+  }
+ 
+  //if nothing equipped, check if item is in bag, if it is, add item to equipped. If not nothing. If holding something 
 
 }
 
-function controlEquip(){
-
+function printBag(){
+  if(bag.length == 0){
+    printLine('You have nothing in your bag');
+    (boolDebug) ? printLine('inventory check success') : null;
+  }else if(equippedItem.length > 0){
+    printLine('You have ' + bag + " in your bag, and " + equippedItem +" is equipped");
+  } else{
+    printLine('You have ' + bag + " in your bag");
+  }
 }
+
 
 function controlAttack(){
 
 }
 
 function debugMode(){
-
+  if(!boolDebug){
+    console.log('debug is true');
+    boolDebug = true;
+    (boolDebug) ? printLine('debug mode activated') : null;
+  }else{
+    console.log('debug is false');
+    boolDebug = false;
+  }
 }
-
-function displayHelp(){
-  //print controls to game
-    printLine("> Welcome to Cable's adventure game\n");
-    printLine("> Available commands\n");
-    printLine("> <span class='important'>new</span>             - Start a new game");
-    printLine("> <span class='important'>help</span>            - Display this help information");
-    printLine("> <span class='important'>look</span>            - Look in the room");
-    printLine("> <span class='important'>n/s/w/n</span>         - Go in the specified direction. Read room description to understand where you can go.");
-    printLine("> <span class='important'>grab object</span>     - Grab specified object from the room");
-    printLine("> <span class='important'>drop object</span>     - Drop specified object from the bag");
-    printLine("> <span class='important'>bag</span>             - Shows the content of the bag");
-    printLine("> ");
-
-}
-
 
 
 
