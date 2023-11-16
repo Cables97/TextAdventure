@@ -9,14 +9,14 @@ let roomMaster = [
             },
             {
                 title: "Room2",
-                desc: "You find yourself in a damp room, a <span class='important'>lantern</span> by your feet throws a dim light against the walls",
+                desc: "You find yourself in a damp room, a <span class='important'>room2</span> by your feet throws a dim light against the walls",
                 items: ["item1", "item2"],
                 east: "Room3",
                 west: "Room1",
             },
             {
                 title: "Room3",
-                desc: "You find yourself in a damp room, a <span class='important'>lantern</span> by your feet throws a dim light against the walls",
+                desc: "You find yourself in a damp room, a <span class='important'>woom3</span> by your feet throws a dim light against the walls",
                 items: ["item1", "item2"],
                 east: "Room1",
                 west: "Room2",
@@ -26,4 +26,4 @@ let roomMaster = [
 
         ]
 
-export default roomMaster;
+export {roomMaster};

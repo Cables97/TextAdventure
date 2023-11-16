@@ -1,4 +1,4 @@
-
+import {roomMaster} from './modules/Rooms.js'
 
 //Constants
 
@@ -43,7 +43,7 @@ function startGame(){
   world = roomMaster;
   bag = [];
   enterRoom("Room1");
-
+  console.log(world);
 }
 
 //event on enter listener, takes text in input box and passes it as playerController(input).
@@ -84,21 +84,14 @@ function enterRoom(roomName)
 
     printRoom(room);
     roomName(room.title);
+    renderRoom();
 }
 
-function printRoom(roomName)
-{
-    printLine("You are in the " + roomName.Name);
-    
-    if (roomName.desc)
-        printLine(roomName.desc);
-        
-    printLine("");
-}
+
 
 function findRoom(roomName)
 {
-    for(var r of world.rooms)
+    for(var r of world)
     {
         if (r.Name === roomName)
             return r;
@@ -205,7 +198,7 @@ function playerController(input){
             dummyCommandCount++;
           } else if ( dummyCommandCount > 6){
             displayHelp();
-            dummyCommandCount++;
+            dummyCommandCount = 0;
           } else {
             printLine('> Please input an acceptable command');
             dummyCommandCount++;
@@ -252,24 +245,17 @@ function scoreInc(num){
     scoreElem = score;
   }
 }
-
+//prints room Description
 function renderRoom(){
   printLine(currentRoom.desc);
 }
 
 function controlMove(dir){
   let newroom = currentRoom[dir];
+  //does room exist?
   if (!newroom)
   {
       printLine("Cannot go " + dir);
-      return;
-  }
-
-  // check if there is a door that requires an object in that direction
-  let key = currentRoom["Door" + dir];
-  if (key && bag.indexOf(key) < 0)
-  {
-    printLine("Cannot go " + dir + ". You need " + key);
       return;
   }
 
@@ -280,7 +266,13 @@ function controlLook(){
   renderRoom();
 }
 
-function controlTake(){
+function controlTake(inputArg){
+  let roomItems = currentRoom[items];
+  if (roomItems.includes(inputArg)){
+    bag.push(inputArg);
+    let x = currentRoom.items.findIndex(inputArg);
+    currentRoom.items.splice(x,1);
+  }
 
 }
 
