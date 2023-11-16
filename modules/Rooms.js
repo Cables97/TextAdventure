@@ -63,22 +63,19 @@ let enemyMaster = [
         name: "Orc",
         health: 4,
         damage: 1,
+        reward: ['chain'], 
+    },
+    {
+        name: "Dog",
+        health: 2,
+        damage: 2,
+        reward: ['collar'], 
+    },
+    {
+        name: "Bats",
+        health: 1,
+        damage: 1,
         reward: [], 
-    },
-    {
-        title: "Room2",
-        desc: "You find yourself in a damp room, a <span class='important'>room2</span> by your feet throws a dim light against the walls",
-        items: [],
-        north: "Room3",
-        west: "Room1",
-        enemy: "weed"
-    },
-    {
-        title: "Room3",
-        desc: "You find yourself in a damp room, a <span class='important'>woom3</span> by your feet throws a dim light against the walls",
-        items: [],
-        east: "Room1",
-        west: "Room2"
     },
 
 

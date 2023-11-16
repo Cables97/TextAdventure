@@ -252,18 +252,20 @@ function scoreInc(num){
 
 //prints room Description
 function printRoom(){
-  
+
   printLine('');
   //prints the desc that matches the index of the first array value
   let i = currentRoom.desc[0];
-  printLine(currentRoom.desc[i])
+  printLine(currentRoom.desc[i]);
 
     // if desc2 is 'on', prints the desc that matches the index of the first array value
   if(currentRoom.desc2[0] == 1){
-    printLine(currentRoom.desc2[i])
+    printLine('');
+    printLine(currentRoom.desc2[i]);
   } 
   else if (currentRoom.desc2[0] == 2){
-    printLine(currentRoom.desc2[i])
+    printLine('');
+    printLine(currentRoom.desc2[i]);
   }
 
   (boolDebug) ? console.log(currentRoom.desc[1]) : null;
@@ -271,14 +273,11 @@ function printRoom(){
   (boolDebug) ? console.log(currentRoom.desc[2]) : null;
   (boolDebug) ? console.log(currentRoom.desc2[2]) : null;
 
-
-
- 
   printLine('');
 }
 
 function printIntro(){
-  printLine("Welcome to Cable's adventure game\n");
+  printLine("Welcome to Cable's adventure game");
 }
 
 
@@ -395,7 +394,6 @@ function printBag(){
 
 
 function controlAttack(){
-
 }
 
 function debugMode(){
