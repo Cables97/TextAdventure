@@ -25,7 +25,7 @@ html, body{
 
 .container{
   margin: auto;
-  border: .25em solid blue;
+  border: .25px solid var(--text-secondary);
   min-width: 450px;
   width: var(--width);
 
@@ -51,7 +51,7 @@ html, body{
 
 #outputcontainer{
   height: 90vh;
-  border: .25em solid red;
+  border: .25px solid var(--text-secondary);
   color: var(--text-main);
   overflow-x: hidden; 
   overflow-anchor: none;
@@ -90,7 +90,7 @@ html, body{
   position: absolute;
   bottom:0;
   width:var(--width);
-  border: .25em solid blue;
+  border: .25px solid var(--text-secondary);
 }
 
 

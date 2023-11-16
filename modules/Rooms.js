@@ -20,34 +20,34 @@ let roomMaster = [
     
 */
     {
-        title: "Room1",
+        title: "StartingRoom",
         desc: [1, "You find yourself in a damp room, <span class='important'>light</span> gently streams in through a crack in the wall", "Your lamp throws "],
         desc2: [0, "the second description", "alternative second"],
         req_item: ["item(s) required to do action in room"], 
         items: ["lamp", "item2"],
         east: "Room2",
         west: "Room3",
-        enemy: ['enemyName', 'desc1', false, 'desc2'] 
+        enemy: ['enemyName', 'A large orc stands facing the wall', true, 'An orc lays bleeding and dead on the floor'] 
     
     },
     {
         title: "Room2",
-        desc: [1, "You find yourself in a dry room, <span class='important'>light</span> gently streams in through a crack in the wall", "Your lamp throws "],
+        desc: [1, "You find yroom2ourself in a dry room, <span class='important'>light</span> gently streams in through a crack in the wall", "Your lamp throws "],
         desc2: [0, "the second description", "alternative second"],
         req_item: ["item(s) required to do action in room"], 
         items: ["lamp", "item2"],
         east: "Room3",
-        west: "Room1",
+        west: "StartingRoom",
         enemy: ['enemyName', 'desc1', false, 'desc2'] 
     },
     {
         title: "Room3",
-        desc: [1, "You find yourself in a dry room, <span class='important'>light</span> gently streams in through a crack in the wall", "Your lamp throws "],
+        desc: [1, "You find room3 yourself in a dry room, <span class='important'>light</span> gently streams in through a crack in the wall", "Your lamp throws "],
         desc2: [0, "the second description", "alternative second"],
         req_item: ["item(s) required to do action in room"], 
         items: ["lamp", "item2"],
         east: "Room1",
-        west: "Room2",
+        west: "StartingRoom",
         enemy: ['enemyName', 'desc1', false, 'desc2'] 
     },
 

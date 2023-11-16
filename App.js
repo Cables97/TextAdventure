@@ -19,14 +19,11 @@ let world = [];
 let bag = [];
 
 let boolDebug = false;
-let score=0;
+let score = 0;
 let dummyCommandCount = 0;
 let equippedItem = [];
-
-
-let currentRoom ={
-
-};
+let currentEnemy = '';
+let currentRoom ={};
 
 //----------------------------------------------- 
 //Event Functions
@@ -36,11 +33,14 @@ window.onload = (event) => {
 };
 
 function startGame(){
-  printIntro();
-  printHelp();
   world = roomMaster;
   bag = [];
-  enterRoom("Room1");
+  equippedItem = [];
+  scoreInc(0);
+  dummyCommandCount = 0;
+  printIntro();
+  printHelp();
+  enterRoom("StartingRoom");
   console.log(world);
 }
 
@@ -58,6 +58,7 @@ function userInput(){
   domInputField.value = ""
   printLine(userCommand);
   playerController(userCommand);
+  domOutputBox.scrollBy(0, 1000);
 }
 
 
@@ -80,13 +81,6 @@ function enterRoom(roomName)
     printRoom(currentRoom);
     updateRoomName(currentRoom.title);
 }
-//print a line on the output
-function printLine(msg){
-
-  const para = document.createElement("p");
-  domOutputBox.appendChild(para);
-  domOutputBox.lastChild.innerHTML = '> ' + msg;
-}
 
 //checks if the room is in world list. Returns availible room by name.
 function findRoom(roomName)
@@ -99,9 +93,48 @@ function findRoom(roomName)
     }
     
     return null;
+}
+
+//prints room Description
+function printRoom(){
+
+  printLine('');
+  //prints the desc that matches the index of the first array value
+  let i = currentRoom.desc[0];
+  printLine(currentRoom.desc[i]);
+
+    // if desc2 is 'on', prints the desc that matches the index of the first array value
+  if(currentRoom.desc2[0] == 1){
+    printLine('');
+    printLine(currentRoom.desc2[i]);
+  } 
+  else if (currentRoom.desc2[0] == 2){
+    printLine('');
+    printLine(currentRoom.desc2[i]);
   }
 
-  
+  //prints if enemy in the room
+  if('enemy' in currentRoom){
+    if(currentRoom.enemy[2] == true){
+      currentEnemy = currentRoom.enemy[0];
+      printLine(currentRoom.enemy[1]);
+    } else {
+        printLine(currentRoom.enemy[3]);
+        currentEnemy = '';
+    }
+  }
+
+
+
+
+  (boolDebug) ? console.log(currentRoom.desc[1]) : null;
+  (boolDebug) ? console.log(currentRoom.desc2[1]) : null;
+  (boolDebug) ? console.log(currentRoom.desc[2]) : null;
+  (boolDebug) ? console.log(currentRoom.desc2[2]) : null;
+
+  printLine('');
+
+}
 /*
 (direction) - move player to next room. direction argument changes the room to matching key-value (eg, north : "room2") (go/move optional)
 look - reprints room description
@@ -114,7 +147,7 @@ this is god - debug mode (shows print.logs)
 
 function playerController(input){
 
-    scoreInc(10);
+
     //player input could be one or two words. slice into array, first word is action, second is argument. 
     let inputstr = input;
   
@@ -196,6 +229,8 @@ function playerController(input){
       break;
 
       case 'newgame':
+        printLine("");
+        printLine("");
         startGame();
       break;
 
@@ -215,7 +250,7 @@ function playerController(input){
           }
         break;
       }
-  }
+}
   
 
 
@@ -224,6 +259,13 @@ function playerController(input){
 //Basic Functions
 //----------------------------------------------- 
 
+//print a line on the output
+function printLine(msg){
+
+  const para = document.createElement("p");
+  domOutputBox.appendChild(para);
+  domOutputBox.lastChild.innerHTML = '> ' + msg;
+}
 
 
 //changes message bellow user input
@@ -250,31 +292,7 @@ function scoreInc(num){
   }
 }
 
-//prints room Description
-function printRoom(){
 
-  printLine('');
-  //prints the desc that matches the index of the first array value
-  let i = currentRoom.desc[0];
-  printLine(currentRoom.desc[i]);
-
-    // if desc2 is 'on', prints the desc that matches the index of the first array value
-  if(currentRoom.desc2[0] == 1){
-    printLine('');
-    printLine(currentRoom.desc2[i]);
-  } 
-  else if (currentRoom.desc2[0] == 2){
-    printLine('');
-    printLine(currentRoom.desc2[i]);
-  }
-
-  (boolDebug) ? console.log(currentRoom.desc[1]) : null;
-  (boolDebug) ? console.log(currentRoom.desc2[1]) : null;
-  (boolDebug) ? console.log(currentRoom.desc[2]) : null;
-  (boolDebug) ? console.log(currentRoom.desc2[2]) : null;
-
-  printLine('');
-}
 
 function printIntro(){
   printLine("Welcome to Cable's adventure game");
@@ -310,10 +328,10 @@ function controlMove(dir){
   //does room exist?
   if (!newroom)
   {
-      printLine("Cannot go " + dir);
+      printLine("Cannot go " + dir +". There is nowhere to go in that direction");
       return;
   }
-
+  scoreInc(10);
   enterRoom(newroom);
 }
 
@@ -331,7 +349,7 @@ function controlTake(inputArg){
     printLine('You now have ' + bag + " in your bag");
     (boolDebug) ? console.log('bag items= ' + bag) : null;
     (boolDebug) ? console.log('room items= ' + roomItems) : null;
-
+    scoreInc(10);
   }else{
     printLine('No item found with that name')
   }
@@ -353,10 +371,12 @@ function controlDrop(inputArg){
       equippedItem.pop();
       printLine("You have dropped your equipped " + inputArg);      
     }
+    scoreInc(10);
+    }else{
+      printLine('No item found with that name')
+    }
 
-  }else{
-    printLine('No item found with that name')
-  }
+
 }
 
 function controlEquip(inputArg){
