@@ -158,7 +158,7 @@ let enemyMaster = [
 
 
 ]
-    
+ /*   
 let itemMaster = [
     {
         name: "lamp",
@@ -182,5 +182,5 @@ let itemMaster = [
 
 
 ]
-
-export {roomMaster, enemyMaster, itemMaster};
+*/
+export {roomMaster, enemyMaster};

@@ -1,9 +1,9 @@
-import {roomMaster, enemyMaster, itemMaster} from './modules/Rooms.js'
+import {roomMaster, enemyMaster, } from './modules/Rooms.js'
 //------------------------------------------------
 //Constants
 //------------------------------------------------
 const enemyBank = enemyMaster;
-const itemBank = itemMaster;
+//const itemBank = itemMaster;
 const roomBank = roomMaster;
 
 //----------------------------------------------- 
