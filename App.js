@@ -4,6 +4,7 @@ import {roomMaster, enemyMaster, itemMaster} from './modules/Rooms.js'
 //------------------------------------------------
 const enemyBank = enemyMaster;
 const itemBank = itemMaster;
+const roomBank = roomMaster;
 
 //----------------------------------------------- 
 //DOM Variables
@@ -30,17 +31,18 @@ let dummyCommandCount = 0;
 
 let bag = [];
 let equippedItem = [];
-
+let darkCount = 0;
 
 //----------------------------------------------- 
 //Event Functions
 //----------------------------------------------- 
 window.onload = (event) => {
   startGame();
+  domInputField.focus();
 };
 
 function startGame(){
-  world = roomMaster;
+  world = roomBank;
   bag = [];
   equippedItem = [];
   scoreInc(0);
@@ -48,7 +50,6 @@ function startGame(){
   printIntro();
   printHelp();
   enterRoom("StartingRoom");
-  console.log(world);
 }
 
 //event on enter listener, takes text in input box and passes it as playerController(input).
@@ -69,65 +70,45 @@ function userInput(){
 }
 
 
-
 //----------------------------------------------- 
 //Game Functions
 //----------------------------------------------- 
 //Checks if the room that the currentRoom points to exists. If not, cannot find room. PLAYER SHOULD NEVER SEE CANNOT FIND ROOM
 function enterRoom(roomName)
 {
+  //does the room that we are directed to exist
     let r = findRoom(roomName);
     if (!r)
     {
-      printLine("Cannot find room " + roomName);
+      //printLine("Cannot find room " + roomName);
         return;
     }
     
-    currentRoom = r;
+    let deathCheck = isDark();
 
-    printRoom(currentRoom);
-    updateRoomName(currentRoom.title);
+    if(!deathCheck){
+        currentRoom = r;
+        printRoom(currentRoom);
+        updateRoomName(currentRoom.title);
+    } else{
+      killPlayer();
+    }
+
 }
 
 //checks if the room is in world list. Returns availible room by name.
 function findRoom(roomName)
 {
-  console.log(world);
+  //console.log(world);
     for(var r of world)
     {
         if (r.title === roomName)
             return r;
+          //console.log(r);
     }
     
     return null;
 }
-
-function findItem(itemName)
-{
-  console.log(itemBank);
-    for(var r of itemBank)
-    {
-        if (r.name === itemName)
-            return r;
-    }
-    
-    return null;
-}
-
-function findEnemy(enemyName)
-{
-  console.log(enemyBank);
-    for(var r of enemyBank)
-    {
-        if (r.name === enemyName)
-            return r;
-    }
-    
-    return null;
-}
-
-
-
 
 //prints room Description
 function printRoom(){
@@ -151,14 +132,13 @@ function printRoom(){
   if('enemy' in currentRoom){
     if(currentRoom.enemy[2] == true){
       mountEnemy(currentRoom.enemy[0]);
-      printLine(currentRoom.enemy[1]);
+      printEnemy();
     } else {
-        printLine(currentRoom.enemy[3]);
         unmountEnemy() 
     }
   }
 
-
+  //printLine(currentRoom.items);
 
 
   (boolDebug) ? console.log(currentRoom.desc[1]) : null;
@@ -169,6 +149,48 @@ function printRoom(){
   printLine('');
 
 }
+
+function mountEnemy(enemy){
+  
+ 
+    console.log(enemy + " mounted")
+    let r = findEnemy(enemy);
+    if (!r)
+      {
+        printLine("Cannot find enemy " + enemy);
+          return;
+      }
+      
+    currentEnemy = r;
+    
+
+
+}
+
+function findEnemy(enemyName)
+{
+  console.log(enemyBank);
+    for(var r of enemyBank)
+    {
+        if (r.name === enemyName)
+            return r;
+    }
+    
+    return null;
+}
+
+function printEnemy(){
+  if(currentRoom.enemy[2] == true){
+    printLine(currentRoom.enemy[1]);
+    console.log('enemy alive');
+    console.log(currentRoom.enemy[2]);
+  } else if (currentRoom.enemy[2] === false) {
+    printLine(currentRoom.enemy[4]);
+    console.log('enemy dead');
+    console.log(currentRoom.enemy[2]);
+  }
+}
+
 
 /*
 (direction) - move player to next room. direction argument changes the room to matching key-value (eg, north : "room2") (go/move optional)
@@ -264,9 +286,7 @@ function playerController(input){
       break;
 
       case 'newgame':
-        printLine("");
-        printLine("");
-        startGame();
+        newGame();
       break;
 
       default: 
@@ -289,7 +309,9 @@ function playerController(input){
       }
 }
   
-
+function newGame(){
+  window.location.reload();
+}
 
 
 //----------------------------------------------- 
@@ -357,17 +379,63 @@ function printHelp(){
 //Character Functions
 //----------------------------------------------- 
 
+function lockedDoor(inputArg){
+  
+  if ('lockedExit' in currentRoom){
+
+  var lockedExits = currentRoom.lockedExit; //[0[0], 0[1]], [1[0], 1[1]],
+  let desiredDirection = inputArg;
+  console.log(lockedExits + ' = lockedexits');
+  console.log(desiredDirection + " 1");
+
+
+  //for every 'locked door' in the current room
+  for(let i = 0; i < lockedExits.length; i++){
+    console.log(lockedExits[i]);
+      //if the input direction matches where the locked door is
+
+
+    if (lockedExits[i][0] == desiredDirection){
+      console.log(desiredDirection + " = dd");
+      let requiredItem = lockedExits[i][1]
+      console.log('requiredItem = ' + requiredItem)
+      //check if they have a matching item to the required item
+      if(bag.includes(requiredItem)){
+            console.log("door isnt locked");
+            return false;
+      }else{
+          console.log(desiredDirection + "door is locked");
+            return true;
+        }
+
+        } 
+      }
+    }
+  }
+
 
 function controlMove(dir){
   let newroom = currentRoom[dir];
-  //does room exist?
+  //if the room in that direction is locked, print cant move, if can point to enter room. 
+
+  //if the door is locked, and you dont have item, door is locked
+  let lockedBool = lockedDoor(dir);
+
+
+  //does path in that direction exist?
   if (!newroom)
   {
       printLine("Cannot go " + dir +". There is nowhere to go in that direction");
       return;
+  } else{
+    if(!lockedBool){
+      scoreInc(10);
+      enterRoom(newroom);  
+    }else if(lockedBool){
+      printLine("The door is locked, you probably need a key to open it.");
+}
+
   }
-  scoreInc(10);
-  enterRoom(newroom);
 }
 
 function controlLook(){
@@ -379,19 +447,17 @@ function controlTake(inputArg){
 
   if (roomItems.includes(inputArg)){
     //let i = findRoom(currentRoom.title);
+    //add item to bag
     bag.push(inputArg);
+    //remove item with that name from the current room items
     let x = currentRoom.items.indexOf(inputArg);
     currentRoom.items.splice(x,1);
+
 
     printLine('You now have ' + bag + " in your bag");
     (boolDebug) ? console.log('bag items= ' + bag) : null;
     (boolDebug) ? console.log('room items= ' + roomItems) : null;
     scoreInc(10);
-
-
-
-
-
 
   }else{
     printLine('No item found with that name')
@@ -427,9 +493,8 @@ function controlEquip(inputArg){
   if (bag.includes(inputArg)){
     
     if (equippedItem.length == 0){
-      equippedItem.push(inputArg)
-      printLine("You have equipped your " + inputArg)
-      (boolDebug) ? console.log("equipped item " + equippedItem[0]) : null;
+      equippedItem.push(inputArg);
+      printLine("You have equipped your " + inputArg);
     } else if(equippedItem.length == 1){
       equippedItem.pop();
       equippedItem.push(inputArg);
@@ -455,33 +520,59 @@ function printBag(){
   }
 }
 
-function mountEnemy(enemy){
-  let r = findEnemy(enemy);
-    
-  if (!r)
-    {
-      printLine("Cannot find enemy " + enemy);
-        return;
-    }
-    
-    currentEnemy = r;
-
-}
-
 function unmountEnemy() {
   currentEnemy = "";
 }
 
-
-
+function killEnemy(){
+  //if the player has a weapon
+  if (equippedItem[0] == 'knife'){
+    //set isalive value to false
+    currentRoom.enemy[2] = false;
+    console.log(currentRoom.enemy[2]);
+    //print killing line
+    printLine(currentRoom.enemy[3]);
+    //add reward to roomitems
+    console.log(currentEnemy.reward + " " + currentRoom.items); 
+    currentRoom.items = currentRoom.items.concat(currentEnemy.reward);
+    console.log(currentRoom.items); 
+    unmountEnemy();
+    printEnemy();
+  } else {
+    printLine("You have no weapon, that is ill advised")
+  }
+}
 
 function controlAttack(inputArg){
- if(inputArg == currentEnemy){
-
+  console.log(inputArg + currentEnemy.name);
+ if(inputArg == currentEnemy.name){
+  console.log('you attack enemy')
+  killEnemy();
+ } else{
+  printLine("You swing at the air");
  }
 
 }
 
+function isDark(){
+  if('isDark' in currentRoom){
+    if (bag.includes('lamp')){
+      darkCount = 0;
+      return false
+    }else{
+      darkCount++;
+      if(darkCount == 2){
+        return true;
+    }
+      else{
+        return false;
+  }}}
+}
+
+function killPlayer(){
+  console.log('you dead')
+  enterRoom('dead');
+}
 
 function debugMode(){
   if(!boolDebug){
@@ -493,6 +584,3 @@ function debugMode(){
     boolDebug = false;
   }
 }
-
-
-

@@ -10,46 +10,128 @@ let roomMaster = [
         title: "template",
         desc: [1, "the normal description index#=1", "alternate description i#=2"],
         desc2: [0, "the second description", "alternative second"],
-        req_item: ["item(s) required to do action in room"], 
+        req_item: ["item required to exit"], 
         items: ["lamp", "item2"],
         east: "east link",
         west: "west link",
         north: "north link",
         south: "south link",
-        enemy: ['enemyName', 'desc1', false, 'desc2'] 
+        lockedExit: [[direction, item required]]
+        enemy: ['enemyName', 'desc1', false, 'kill desc', 'desc2'] 
     
 */
     {
-        title: "StartingRoom",
-        desc: [1, "You find yourself in a damp room, <span class='important'>light</span> gently streams in through a crack in the wall", "Your lamp throws "],
+        title: "dead",
+        desc: [1, "A Creature waiting in the dark jumps from the shadows and makes a quick meal out of you. Type <span class='important'> newgame </span> to try again", ""],
         desc2: [0, "the second description", "alternative second"],
-        req_item: ["item(s) required to do action in room"], 
-        items: ["lamp", "item2"],
-        east: "Room2",
-        west: "Room3",
-        enemy: ['Orc', 'A large orc stands facing the wall', true, 'An orc lays bleeding and dead on the floor'] 
+    }, 
+    {
+        title: "WinStateRoom",
+        desc: [1, "Congrats, you win. This was a first attempt at getting the 'engine' to work. The functions and story will be more flushed out in time", ""],
+        desc2: [0, "the second description", "alternative second"],
+
+    },
+    {
+        title: "StartingRoom",
+        desc: [1, "You find yourself in a small room. a small stream of light pours in from a grated hole in a door to the <span class='important'> North </span>. Stained concrete walls block your other directions", "Your lamp throws "],
+        desc2: [1, "A small tray of food lays on the ground before the door, a slight glint shines from beneath the slop", "alternative second"],
+        items: ["food tray", "key"],
+        north: "CellHallway",
+        lockedExit: [['north', 'key'], ['south', 'knife'] ],
+        //enemy: ['orc', 'A large orc stands facing the wall', true, "as he lays dying, you see a chain around the orks neck", 'An orc lays bleeding and dead on the floor'] 
     
     },
     {
-        title: "Room2",
-        desc: [1, "You find yroom2ourself in a dry room, <span class='important'>light</span> gently streams in through a crack in the wall", "Your lamp throws "],
+        title: "CellHallway",
+        desc: [1, "You stand in a hallway. Doors with grated windows lines the walls. You can hear gentle crying from one of the rooms to the <span class='important'>East</span> at the end of the hallway. A set of stairs on the <span class='important'>West</span> side of the stairs lead upwards", "Your lamp throws "],
         desc2: [0, "the second description", "alternative second"],
-        req_item: ["item(s) required to do action in room"], 
-        items: ["lamp", "item2"],
-        east: "Room3",
-        west: "StartingRoom",
+        east: "Stairs",
+        west: "End of Hall",
+        south: "StartingRoom"
         
     },
     {
-        title: "Room3",
-        desc: [1, "You find room3 yourself in a dry room, <span class='important'>light</span> gently streams in through a crack in the wall", "Your lamp throws "],
+        title: "End of Hall",
+        desc: [1, "At the end of the hall is a small stool. As you approach, the crying stops, and the figure cowers in the corner of their room, hidden beneath a tattered blanket ", "Your lamp throws "],
+        desc2: [0, "A small brass <span class='important'>lamp</span> sits on the stool. It's flame throwing shadows against the already dark walls", "alternative second"],
+        items: ['lamp'],
+        west: "CellHallway"
+    },
+    {
+        title: "Stairs",
+        desc: [1, "The edges of the concrete stairs start to crumble as you step on them, the smell of iron burns your nostrils. The faint sound of sobbing can be heard to the <span class='important'>West</span> at the bottom of the stairs. A bright light illuminates an open door to the <span class='important'>North</span>", ""],
         desc2: [0, "the second description", "alternative second"],
-        req_item: ["item(s) required to do action in room"], 
-        items: ["lamp", "item2"],
-        east: "Room1",
-        west: "StartingRoom",
+        items: [],
+        west: "CellHallway",
+        north: "TopOfStairs",
         
     },
+    {
+        title: "TopOfStairs",
+        desc: [1, "You at the top of a set of stairs, an ajar door leads to the <span class='important'>North</span>, and the sound of gentle snoring can be heard to the <span class='important'>East</span>", ""],
+        desc2: [0, "the second description", "alternative second"],
+        items: [],
+        east: "GuardRoom",
+        north: "Kitchen",
+        south: 'Stairs'
+        
+    },
+    {
+        title: "Kitchen",
+        desc: [1, "You're in what looks to be an empty kitchen, the smell of rot is almost overpowering. Large red stains cover the floor and countertops. An open door leading to the top of some stairs is to the <span class='important'>South</span>", ""],
+        desc2: [0, "A large blood-covered <span class='important'>knife</span> sits on the counter top.", "alternative second"],
+        items: ['knife'],
+        south: "TopOfStairs",
+        
+    },
+    {
+        title: "GuardRoom",
+        desc: [1, "You're in a small room with tables and chairs. A half eaten plate of meat sits on the table next to an interrupted card game. A large, bolted door sits on the <span class='important'>east</span> side of the room. A door stands ajar on the <span class='important'>West</span> side.", ""],
+        desc2: [0, "the second description", "alternative second"],
+        items: [],
+        west: "TopOfStairs",
+        east: "SubwayTracks1",
+        lockedExit: [['east', 'key2']],
+        enemy: ['guard', "A man sits snoring, slumped in a chair next to the door on the <span class='important'>east</span> side of the room.", true, "as he lays dying, you see a key on a chain around their neck", 'A man lay bleeding on the floor. Unmoving.'] 
+    },
+    {
+        title: "SubwayTracks1",
+        desc: [1, "Standing in a large, long unused tunnel with metal tracks on the ground. Water is dripping from the ceiling into large puddles on the ground. Plant roots cover the walls, almost completely obscuring the decaying walls beyond. Giant boulders block the passage south, but light appears from the tunnels <span class='important'>North</span>. A red puddle seeps from below a door to the <span class='important'>East</span>", ""],
+        desc2: [0, "the second description", "alternative second"],
+        items: [],
+        isDark: true,
+        west: "GuardRoom",
+        north: "SubwayTracks2",
+    },
+    {
+        title: "SubwayTracks2",
+        desc: [1, "Standing in a large, long unused tunnel with metal tracks on the ground. The roots grow denser as you travel down the tunnel.  Suddenly it opens up, and you come across a room with stairs leading upward. The ceiling looked to have fallen in long ago. The base of a giant tree had burst through the tile floor, and was more than 3 arm spans wide. A section of grating had been used to block the stairs, roots holding it fast in place. The tunnel continues <span class='important'>North</span>", ""],
+        desc2: [0, "the second description", "alternative second"],
+        items: [],
+        isDark: true,
+        south: "SubwayTracks1",
+        north: "SubwayTracks3",
+    },
+    {
+        title: "SubwayTracks3",
+        desc: [1, "Giant metal tubes block the rest of the tunnel. Rusty water drips from various places, causing the sound to echo against the walls. A small service ladder to the <span class='important'>East</span> leads into a hole in the floor" , ""],
+        desc2: [0, "the second description", "alternative second"],
+        items: [],
+        isDark: true,
+        south: "SubwayTracks2",
+        east: "SewerTunnel",
+    },
+    {
+        title: "SewerTunnel",
+        desc: [1, "Giant metal tubes block the rest of the tunnel. Rusty water drips from various places, causing the sound to echo against the walls. A small service ladder to the <span class='important'>East</span> leads into a hole in the floor" , ""],
+        desc2: [0, "the second description", "alternative second"],
+        items: [],
+        isDark: true,
+        north: "WinStateRoom",
+        west: "SubwayTracks3",
+    },
+
+
 
 
 
@@ -60,17 +142,17 @@ let roomMaster = [
 //----------------------------------------------- 
 let enemyMaster = [
     {
-        name: "Orc",
+        name: "orc",
         health: 4,
         damage: 1,
         reward: ['chain'],
         killMsg: "The Orc swings it's giant club at your face surprisingly fast" 
     },
     {
-        name: "Dog",
+        name: "guard",
         health: 2,
         damage: 2,
-        reward: ['collar'], 
+        reward: ['key2'], 
     },
     {
         name: "Bats",
