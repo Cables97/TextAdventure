@@ -56,6 +56,7 @@ function startGame(){
 domInputField.addEventListener("keydown", function (e) {
   if (e.code === 'Enter') {
     userInput();
+    
   }
 });
 
@@ -66,7 +67,7 @@ function userInput(){
   domInputField.value = ""
   printLine(userCommand);
   playerController(userCommand);
-  domOutputBox.scrollBy(0, 1000);
+  
 }
 
 
@@ -119,14 +120,14 @@ function printRoom(){
   printLine(currentRoom.desc[i]);
 
     // if desc2 is 'on', prints the desc that matches the index of the first array value
-  if(currentRoom.desc2[0] == 1){
-    printLine('');
-    printLine(currentRoom.desc2[i]);
-  } 
-  else if (currentRoom.desc2[0] == 2){
-    printLine('');
-    printLine(currentRoom.desc2[i]);
-  }
+    if('desc2' in currentRoom){
+      //set current string index to whether has item or not
+      let crItems = currentRoom.items;
+      (crItems.length == 1) ? currentRoom.desc2[0] = 1 : currentRoom.desc2[0] = 2; 
+      let descIndex = currentRoom.desc2[0];
+      console.log(descIndex);
+      printLine(currentRoom.desc2[descIndex]);
+    }
 
   //prints if enemy in the room
   if('enemy' in currentRoom){
@@ -138,13 +139,6 @@ function printRoom(){
     }
   }
 
-  //printLine(currentRoom.items);
-
-
-  (boolDebug) ? console.log(currentRoom.desc[1]) : null;
-  (boolDebug) ? console.log(currentRoom.desc2[1]) : null;
-  (boolDebug) ? console.log(currentRoom.desc[2]) : null;
-  (boolDebug) ? console.log(currentRoom.desc2[2]) : null;
 
   printLine('');
 
@@ -191,7 +185,6 @@ function printEnemy(){
   }
 }
 
-
 /*
 (direction) - move player to next room. direction argument changes the room to matching key-value (eg, north : "room2") (go/move optional)
 look - reprints room description
@@ -213,7 +206,7 @@ function playerController(input){
     let inputCommand = inputArray[0];
     //console.log("input command= " + inputCommand);
   
-    let inputArg = inputArray[1];
+    let inputArgument = inputArray[1];
     //console.log("input argument= " + inputArg);
   
     //console.log("dummyCommandCount= " + dummyCommandCount);
@@ -223,71 +216,94 @@ function playerController(input){
   
       case 'go':
       case 'move':
-        controlMove(inputArg);
-        dummyCommandCount = 0;
+        switch(inputArgument){
+          case 'n':
+          case 'north':
+            controlMove("north");
+            dummyCommandCount = 0;
+            break;
+      
+          case 's':
+          case 'south':
+            controlMove("south");
+            dummyCommandCount = 0;
+            break;
+      
+          case 'w':
+          case 'west':
+            controlMove("west");
+            dummyCommandCount = 0;
+            break;
+      
+          case 'e':
+          case 'east':
+            controlMove("east");
+            dummyCommandCount = 0;
+            break;
+            }
       break;
   
       case 'n':
       case 'north':
         controlMove("north");
         dummyCommandCount = 0;
-      break;
+        break;
   
       case 's':
       case 'south':
         controlMove("south");
         dummyCommandCount = 0;
-      break;
+        break;
   
       case 'w':
       case 'west':
         controlMove("west");
         dummyCommandCount = 0;
-      break;
+        break;
   
       case 'e':
       case 'east':
         controlMove("east");
         dummyCommandCount = 0;
-      break;
+        break;
   
       case 'look':
-        controlLook();
+        controlLook(inputArgument);
         dummyCommandCount = 0;
-      break;
+        break;
   
       case 'take':
-        controlTake(inputArg);
+        controlTake(inputArgument);
         dummyCommandCount = 0;
-      break;
+        break;
   
       case 'drop':
-        controlDrop(inputArg);
+        controlDrop(inputArgument);
         dummyCommandCount = 0;
-      break;
+        break;
   
       case 'equip':
-        controlEquip(inputArg);
+        controlEquip(inputArgument);
         dummyCommandCount = 0;
-      break;
+        break;
   
       case 'attack':
-        controlAttack(inputArg);
+        controlAttack(inputArgument);
         dummyCommandCount = 0;
-      break; 
+        break; 
   
       case 'thisisgod':
         debugMode();
-      break;
+        break;
 
       case 'bag':
         printBag();
         dummyCommandCount = 0;
-      break;
+        break;
 
       case 'newgame':
         newGame();
-      break;
+        break;
 
       default: 
           if(dummyCommandCount === 3){
@@ -313,7 +329,6 @@ function newGame(){
   window.location.reload();
 }
 
-
 //----------------------------------------------- 
 //Basic Functions
 //----------------------------------------------- 
@@ -324,8 +339,8 @@ function printLine(msg){
   const para = document.createElement("p");
   domOutputBox.appendChild(para);
   domOutputBox.lastChild.innerHTML = '> ' + msg;
+  domOutputBox.scrollBy(0, 1000);
 }
-
 
 //changes message bellow user input
 function consoleMsg(msg){
@@ -355,7 +370,6 @@ function printIntro(){
   printLine("Welcome to Cable's adventure game");
 }
 
-
 function printHelp(){
   //print controls to game
     
@@ -363,16 +377,13 @@ function printHelp(){
   printLine("<span class='important'>new</span>             - Start a new game");
   printLine("<span class='important'>help</span>            - Display this help information");
   printLine("<span class='important'>look</span>            - Look in the room");
-  printLine("<span class='important'>(go) n/s/w/n</span>    - Go in the specified direction. Read room description to understand where you can go.");
+  printLine("<span class='important'>(go) n/s/w/e / north/south/west/east</span>    - Go in the specified direction. Read room description to understand where you can go.");
   printLine("<span class='important'>grab object</span>     - Grab specified object from the room");
   printLine("<span class='important'>drop object</span>     - Drop specified object from the bag");
   printLine("<span class='important'>bag</span>             - Shows the content of the bag");
   printLine("");
 
 }
-
-
-
 
 
 //----------------------------------------------- 
@@ -425,7 +436,7 @@ function controlMove(dir){
   //does path in that direction exist?
   if (!newroom)
   {
-      printLine("Cannot go " + dir +". There is nowhere to go in that direction");
+      printLine("Cannot go :" + dir +". There is nowhere to go in that direction");
       return;
   } else{
     if(!lockedBool){
@@ -438,10 +449,70 @@ function controlMove(dir){
   }
 }
 
-function controlLook(){
-  printRoom();
+function controlLook(inputArg){
+
+  let lookTarget = inputArg;
+  if (!lookTarget){
+    printRoom();
+
+  }else{  switch(lookTarget) {
+    //All look checks
+    case 'key':
+      if (bag.includes('key')){
+        printLine("An iron key, the bow is noticibly more than the rest of the key.. it must get a lot of use.");
+      } else {printLine("You can't see what you're trying to look at");}
+      break;
+
+    case 'knife':
+      if (bag.includes('knife')){
+        printLine("An old kitchen knife. The large flat blade is fairly dull, and large chips in the cutting edge mean this blade is best used for stabbing.. or tetanus poisoning");
+      } else {printLine("You can't see what you're trying to look at");}
+      break;
+
+    case 'key2':
+      if (bag.includes('key2')){
+        printLine("A modern key, looks like it's for a deadbolt.");
+      } else { printLine("You can't see what you're trying to look at");}
+      break;
+      
+    case 'guard':
+      if (currentEnemy == 'guard'){
+        printLine(currentEnemy.desc);
+      } else { printLine("Who?");}
+      break;
+
+    case 'lamp':
+      if (bag.includes('lamp')){
+        printLine("A small brass lamp");
+      } else { printLine("You can't see what you're trying to look at");}
+      break;
+
+    case 'tray':
+    case 'foodtray':
+    case 'glint':
+    case 'slop':
+    case 'food':
+      if(currentRoom.title == 'StartingRoom'){
+      if (currentRoom.desc2[0] == 1){
+        printLine("You flip the tray over, spilling the slop on the floor. A key clatters onto the floor, it was hidden under the excuse for food.")
+        currentRoom.items.push('key');
+        currentRoom.desc2[0] = 2;
+      }
+    }
+      break;
+
+    case 'room':
+    case 'around':
+      printRoom();
+      break;
+
+    default:
+      printLine("You can't see what you're trying to look at");
+      break;
+    } 
 }
 
+}
 function controlTake(inputArg){
   let roomItems = currentRoom.items;
 
@@ -452,12 +523,16 @@ function controlTake(inputArg){
     //remove item with that name from the current room items
     let x = currentRoom.items.indexOf(inputArg);
     currentRoom.items.splice(x,1);
-
-
     printLine('You now have ' + bag + " in your bag");
     (boolDebug) ? console.log('bag items= ' + bag) : null;
     (boolDebug) ? console.log('room items= ' + roomItems) : null;
     scoreInc(10);
+
+    if(equippedItem.length == 0 && inputArg == 'knife'){
+      controlEquip('knife');
+    }
+
+
 
   }else{
     printLine('No item found with that name')
@@ -529,13 +604,13 @@ function killEnemy(){
   if (equippedItem[0] == 'knife'){
     //set isalive value to false
     currentRoom.enemy[2] = false;
-    console.log(currentRoom.enemy[2]);
+    //console.log(currentRoom.enemy[2]);
     //print killing line
     printLine(currentRoom.enemy[3]);
     //add reward to roomitems
-    console.log(currentEnemy.reward + " " + currentRoom.items); 
+    //console.log(currentEnemy.reward + " " + currentRoom.items); 
     currentRoom.items = currentRoom.items.concat(currentEnemy.reward);
-    console.log(currentRoom.items); 
+    //console.log(currentRoom.items); 
     unmountEnemy();
     printEnemy();
   } else {
