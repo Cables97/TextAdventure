@@ -1,4 +1,4 @@
-import {roomMaster, enemyMaster, } from './modules/Rooms.js'
+import {roomMaster, enemyMaster, } from './modules/Data.js'
 //------------------------------------------------
 //Constants
 //------------------------------------------------
@@ -14,14 +14,12 @@ const domRoomTitle = document.getElementById("roomTitle");
 const domScoreElem = document.getElementById("score");
 const domInputField = document.getElementById("input");
 const domConsoleMessage = document.getElementById("inputMessage");
-const domAnchor = document.getElementById("anchor");
 
 //----------------------------------------------- 
 //Game Variables
 //----------------------------------------------- 
 let world = [];
 let currentEnemy = '';
-let previousEnemyArr = []; 
 let currentRoom ={};
 
 let boolDebug = false;
@@ -58,7 +56,8 @@ domInputField.addEventListener("keydown", function (e) {
     userInput();
     
   }
-});
+}
+);
 
 //parses user command, passes it to userCommand
 function userInput(){
@@ -115,7 +114,6 @@ function findRoom(roomName)
 //prints room Description
 function printRoom(){
 
-  printLine('');
   //prints the desc that matches the index of the first array value
   let i = currentRoom.desc[0];
   printLine(currentRoom.desc[i]);
@@ -140,12 +138,74 @@ function printRoom(){
         unmountEnemy() 
     }
   }
-
-
-  printLine('');
-
 }
 
+//checks for a locked door in room  
+function lockedDoor(inputArg){
+  if ('lockedExit' in currentRoom){
+  let lockedExits = currentRoom.lockedExit; //[0[0], 0[1]], [1[0], 1[1]],
+  let desiredDirection = inputArg;
+  console.log(lockedExits + ' = lockedexits');
+  console.log(desiredDirection + " 1");
+  //for every 'locked door' in the current room
+  for(let i = 0; i < lockedExits.length; i++){
+    console.log(lockedExits[i]);
+      //if the input direction matches where the locked door is
+    if (lockedExits[i][0] == desiredDirection){
+      console.log(desiredDirection + " = dd");
+      let requiredItem = lockedExits[i][1]
+      console.log('requiredItem = ' + requiredItem)
+      //check if they have a matching item to the required item
+      if(bag.includes(requiredItem)){
+            lockedDoorRemoval(desiredDirection);
+            printLine("After unlocking, the key snaps off in the door.")
+            printLine("Key removed from bag")
+            return false;
+      }else{
+          console.log(desiredDirection + "door is locked");
+            return true;
+        }
+
+        } 
+      }
+    }
+}
+
+//removes the locked door when key in inventory
+function lockedDoorRemoval(inputArg){
+  //iterate through locked doors
+  let lockedExits = currentRoom.lockedExit; //[0[0], 0[1]], [1[0], 1[1]],
+  for(let i = 0; i < lockedExits.length; i++){
+      //if the input direction matches where the locked door is
+    if (lockedExits[i][0] == inputArg){
+      let requiredItem = lockedExits[i][1]
+      //check if they have a matching item to the required item
+      if(bag.includes(requiredItem)){
+          //remove key from bag
+          let keyIndex = bag.indexOf('key');
+          bag.slice(keyIndex, 1);
+          //remove lockedExit from Room
+          console.log(currentRoom.lockedExit[i] + " has been spliced");
+          currentRoom.lockedExit.splice(i, 1);
+          console.log(currentRoom.lockedExit);
+      }
+    }
+    }
+}
+//looks in room for enemy,
+function findEnemy(enemyName)
+{
+  console.log(enemyBank);
+    for(var r of enemyBank)
+    {
+        if (r.name === enemyName)
+            return r;
+    }
+    
+    return null;
+}
+
+//mounts enemy that matches from enemybank
 function mountEnemy(enemy){
   
  
@@ -163,18 +223,7 @@ function mountEnemy(enemy){
 
 }
 
-function findEnemy(enemyName)
-{
-  console.log(enemyBank);
-    for(var r of enemyBank)
-    {
-        if (r.name === enemyName)
-            return r;
-    }
-    
-    return null;
-}
-
+// if enemy in room, prints the enemy details
 function printEnemy(){
   if(currentRoom.enemy[2] == true){
     printLine(currentRoom.enemy[1]);
@@ -187,7 +236,32 @@ function printEnemy(){
   }
 }
 
-/*
+// Removes enemy from room, adds reward, prints kill line - instant kill removed need to store past enemies
+function killEnemy(){
+  //if the player has a weapon
+  if (equippedItem[0] == 'knife'){
+    //set isalive value to false
+    currentRoom.enemy[2] = false;
+    //console.log(currentRoom.enemy[2]);
+    //print killing line
+    printLine(currentRoom.enemy[3]);
+    //add reward to roomitems
+    //console.log(currentEnemy.reward + " " + currentRoom.items); 
+    currentRoom.items = currentRoom.items.concat(currentEnemy.reward);
+    //console.log(currentRoom.items); 
+    unmountEnemy();
+    printEnemy();
+  } else {
+    printLine("You have no weapon, that is ill advised")
+  }
+}
+
+//remove the enemy from current enemy
+function unmountEnemy() {
+  currentEnemy = "";
+}
+
+/* Controls
 (direction) - move player to next room. direction argument changes the room to matching key-value (eg, north : "room2") (go/move optional)
 look - reprints room description
 take (item) - add availible item in room to inventory, delete key-value from room
@@ -327,6 +401,7 @@ function playerController(input){
       }
 }
   
+// reloads the browser. Cleanest way to clear the game
 function newGame(){
   window.location.reload();
 }
@@ -335,7 +410,7 @@ function newGame(){
 //Basic Functions
 //----------------------------------------------- 
 
-//print a line on the output
+//print a line on the output - and scrolls to bottom of output
 function printLine(msg){
 
   const para = document.createElement("p");
@@ -368,76 +443,42 @@ function scoreInc(num){
   }
 }
 
+//prints intro
 function printIntro(){
   printLine("Welcome to Cable's adventure game");
 }
 
+//prints the controls prompts
 function printHelp(){
   //print controls to game
     
   printLine("Available commands\n");
-  printLine("<span class='important'>new</span>             - Start a new game");
+  printLine("<span class='important'>newgame</span>             - Start a new game");
   printLine("<span class='important'>help</span>            - Display this help information");
-  printLine("<span class='important'>look</span>            - Look in the room");
+  printLine("<span class='important'>look (target)</span>            - Look in the room");
   printLine("<span class='important'>(go) n/s/w/e / north/south/west/east</span>    - Go in the specified direction. Read room description to understand where you can go.");
-  printLine("<span class='important'>grab object</span>     - Grab specified object from the room");
-  printLine("<span class='important'>drop object</span>     - Drop specified object from the bag");
+  printLine("<span class='important'>take (object)</span>     - Grab specified object from the room");
+  printLine("<span class='important'>drop (object)</span>     - Drop specified object from the bag");
   printLine("<span class='important'>bag</span>             - Shows the content of the bag");
   printLine("");
 
 }
 
+//print bag contents
+function printBag(){
+  if(bag.length == 0){
+    printLine('You have nothing in your bag');
+    (boolDebug) ? printLine('inventory check success') : null;
+  }else if(equippedItem.length > 0){
+    printLine('You have ' + bag + " in your bag, and " + equippedItem +" is equipped");
+  } else{
+    printLine('You have ' + bag + " in your bag");
+  }
+}
 
 //----------------------------------------------- 
 //Character Functions
 //----------------------------------------------- 
-
-function lockedDoor(inputArg){
-  
-  if ('lockedExit' in currentRoom){
-
-  var lockedExits = currentRoom.lockedExit; //[0[0], 0[1]], [1[0], 1[1]],
-  let desiredDirection = inputArg;
-  console.log(lockedExits + ' = lockedexits');
-  console.log(desiredDirection + " 1");
-
-
-  //for every 'locked door' in the current room
-  for(let i = 0; i < lockedExits.length; i++){
-    console.log(lockedExits[i]);
-      //if the input direction matches where the locked door is
-
-
-    if (lockedExits[i][0] == desiredDirection){
-      console.log(desiredDirection + " = dd");
-      let requiredItem = lockedExits[i][1]
-      console.log('requiredItem = ' + requiredItem)
-      //check if they have a matching item to the required item
-      if(bag.includes(requiredItem)){
-            console.log("door isnt locked");
-            return false;
-      }else{
-          console.log(desiredDirection + "door is locked");
-            return true;
-        }
-
-        } 
-      }
-    }
-}
-
-function lockedDoorRemoval(){
-  //remove key from bag
-  let keyIndex = bag.indexOf('key');
-  bag.slice(keyIndex, 1);
-
-  //remove lockedExit from Room
-  
-
-
-}
-
-
 
 function controlMove(dir){
   //dir == room movement direction
@@ -456,7 +497,6 @@ function controlMove(dir){
   } else{
 
     if(!lockedBool){
-      lockedDoorRemoval();
       scoreInc(10);
       enterRoom(newroom);
 
@@ -468,6 +508,7 @@ function controlMove(dir){
   }
 }
 
+// look command - allows target - contains indiv look targets
 function controlLook(inputArg){
 
   let lookTarget = inputArg;
@@ -536,6 +577,7 @@ function controlLook(inputArg){
 
 }
 
+//adds target item to players bag, removes from room
 function controlTake(inputArg){
   let roomItems = currentRoom.items;
 
@@ -563,6 +605,7 @@ function controlTake(inputArg){
 
 }
 
+// drop command - drops item in room. Adds to items list, adds dropped desc2 to room
 function controlDrop(inputArg){
   let roomItems = currentRoom.items;
 
@@ -591,6 +634,7 @@ function controlDrop(inputArg){
 
 }
 
+// equip command
 function controlEquip(inputArg){
   //check if in bag, if not, 
   if (bag.includes(inputArg)){
@@ -612,40 +656,8 @@ function controlEquip(inputArg){
 
 }
 
-function printBag(){
-  if(bag.length == 0){
-    printLine('You have nothing in your bag');
-    (boolDebug) ? printLine('inventory check success') : null;
-  }else if(equippedItem.length > 0){
-    printLine('You have ' + bag + " in your bag, and " + equippedItem +" is equipped");
-  } else{
-    printLine('You have ' + bag + " in your bag");
-  }
-}
 
-function unmountEnemy() {
-  currentEnemy = "";
-}
-
-function killEnemy(){
-  //if the player has a weapon
-  if (equippedItem[0] == 'knife'){
-    //set isalive value to false
-    currentRoom.enemy[2] = false;
-    //console.log(currentRoom.enemy[2]);
-    //print killing line
-    printLine(currentRoom.enemy[3]);
-    //add reward to roomitems
-    //console.log(currentEnemy.reward + " " + currentRoom.items); 
-    currentRoom.items = currentRoom.items.concat(currentEnemy.reward);
-    //console.log(currentRoom.items); 
-    unmountEnemy();
-    printEnemy();
-  } else {
-    printLine("You have no weapon, that is ill advised")
-  }
-}
-
+// attack command
 function controlAttack(inputArg){
   console.log(inputArg + currentEnemy.name);
  if(inputArg == currentEnemy.name){
@@ -657,6 +669,7 @@ function controlAttack(inputArg){
 
 }
 
+//counts how many rooms the player has been in without a lightsource. more than 2 and insta-death
 function isDarkCounter(){
   if('isDark' in currentRoom){
     if (bag.includes('lamp')){
@@ -672,8 +685,8 @@ function isDarkCounter(){
   }}}
 }
 
-function darkCheck(){
-  //if there is lamp in bag, and I'm its isDark is true, the room desc prints the first desc. if the dark is true, but no lamp, desc2, 
+//if there is lamp in bag, and I'm its isDark is true, the room desc prints the first desc. if the dark is true, but no lamp, desc2,
+function darkCheck(){ 
   if ('isDark' in currentRoom){
   let lampCheck = bag.includes('lamp')
   if(lampCheck == false && currentRoom.isDark == true){
@@ -685,11 +698,13 @@ function darkCheck(){
     }
 }
 
+//Pushes player into dead 'room'
 function killPlayer(){
   console.log('you dead')
   enterRoom('dead');
 }
 
+//debug console, obsolete
 function debugMode(){
   if(!boolDebug){
     console.log('debug is true');

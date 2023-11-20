@@ -16,9 +16,6 @@
 
 }
 
-
-
-
 html, body{
   background-color: var(--background);
 }
@@ -31,9 +28,6 @@ html, body{
   height: 100vh;
 
 }
-
-
-
 
 .consoleColour{
   background-color: var(--background);
@@ -63,16 +57,7 @@ html, body{
 #outputcontainer > p{
   display:block;
   text-align: left;
-  padding: .15em;
-}
-#outputcontainer > p > .debug{
-  color: purple;
-}
-
-
-
-#anchor {
-  overflow-anchor: auto;
+  padding: .25em;
 }
 
 #statusBar{
@@ -94,7 +79,6 @@ html, body{
   width:var(--width);
   border: .25px solid var(--text-secondary);
 }
-
 
 #consoleGrid{
   display: grid;
@@ -121,5 +105,8 @@ html, body{
     --width: 100vw;
   }
 
+  #outputcontainer > p{
+    padding: .35em;
+  }
 }
 

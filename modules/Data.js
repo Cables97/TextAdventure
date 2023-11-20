@@ -1,4 +1,5 @@
 
+
 //----------------------------------------------- 
 //roomMaster List -The original state of the game. Can be edited in realtime under world variable
 //----------------------------------------------- 
@@ -18,8 +19,8 @@ let roomMaster = [
         south: "south link",
         lockedExit: [[direction, item required]]
         enemy: ['enemyName', 'desc1', false, 'kill desc', 'desc2'] 
-    
-*/
+    */
+
     {
         title: "dead",
         desc: [1, "A Creature waiting in the dark jumps from the shadows and makes a quick meal out of you. Type <span class='important'> newgame </span> to try again", ""],
@@ -157,6 +158,13 @@ let enemyMaster = [
 
 
 ]
+
+
+//----------------------------------------------- 
+//itemMaster List - holds all items and stats. Obsolete
+//----------------------------------------------- 
+
+
  /*   
 let itemMaster = [
     {
@@ -177,9 +185,6 @@ let itemMaster = [
         atkMsg: 'Sparks fly as your lamp collides with ', 
         value: 20 
     },
-
-
-
 ]
 */
 export {roomMaster, enemyMaster};
