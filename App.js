@@ -85,10 +85,11 @@ function enterRoom(roomName)
         return;
     }
     
-    let deathCheck = isDark();
+    let deathCheck = isDarkCounter();
 
     if(!deathCheck){
         currentRoom = r;
+        darkCheck();
         printRoom(currentRoom);
         updateRoomName(currentRoom.title);
     } else{
@@ -122,12 +123,13 @@ function printRoom(){
     // if desc2 is 'on', prints the desc that matches the index of the first array value
     if('desc2' in currentRoom){
       //set current string index to whether has item or not
-      let crItems = currentRoom.items;
-      (crItems.length == 1) ? currentRoom.desc2[0] = 1 : currentRoom.desc2[0] = 2; 
+      //let crItems = currentRoom.items;
+      //(crItems.length == 1) ? currentRoom.desc2[0] = 1 : currentRoom.desc2[0] = 2; 
       let descIndex = currentRoom.desc2[0];
       console.log(descIndex);
       printLine(currentRoom.desc2[descIndex]);
     }
+
 
   //prints if enemy in the room
   if('enemy' in currentRoom){
@@ -422,26 +424,43 @@ function lockedDoor(inputArg){
         } 
       }
     }
-  }
+}
+
+function lockedDoorRemoval(){
+  //remove key from bag
+  let keyIndex = bag.indexOf('key');
+  bag.slice(keyIndex, 1);
+
+  //remove lockedExit from Room
+  
+
+
+}
+
 
 
 function controlMove(dir){
+  //dir == room movement direction
+
   let newroom = currentRoom[dir];
   //if the room in that direction is locked, print cant move, if can point to enter room. 
 
   //if the door is locked, and you dont have item, door is locked
   let lockedBool = lockedDoor(dir);
 
-
   //does path in that direction exist?
   if (!newroom)
   {
-      printLine("Cannot go :" + dir +". There is nowhere to go in that direction");
+      printLine("Cannot go " + dir +". There is nowhere to go in that direction");
       return;
   } else{
+
     if(!lockedBool){
+      lockedDoorRemoval();
       scoreInc(10);
-      enterRoom(newroom);  
+      enterRoom(newroom);
+
+      
     }else if(lockedBool){
       printLine("The door is locked, you probably need a key to open it.");
 }
@@ -497,6 +516,9 @@ function controlLook(inputArg){
         printLine("You flip the tray over, spilling the slop on the floor. A key clatters onto the floor, it was hidden under the excuse for food.")
         currentRoom.items.push('key');
         currentRoom.desc2[0] = 2;
+      } else if (currentRoom.desc2[0] == 2 && currentRoom.items.includes('key')){
+        printLine('A key lays on the floor beside the slop.')
+        printLine()
       }
     }
       break;
@@ -513,6 +535,7 @@ function controlLook(inputArg){
 }
 
 }
+
 function controlTake(inputArg){
   let roomItems = currentRoom.items;
 
@@ -535,7 +558,7 @@ function controlTake(inputArg){
 
 
   }else{
-    printLine('No item found with that name')
+    printLine('No item found with that name');
   }
 
 }
@@ -548,8 +571,13 @@ function controlDrop(inputArg){
     let x = bag.indexOf(inputArg);
     bag.splice(x,1);
     printLine('You have dropped ' + inputArg + " it is no longer in your bag");
+
     (boolDebug) ? console.log('bag items= ' +bag): null;
     (boolDebug) ? console.log('room items= ' +roomItems): null;
+
+    let desc2Bool = 1 ;
+    let desc2Prompt = 'A ' + inputArg + ' lays on the floor by your feet.';
+    currentRoom['desc2'] = [desc2Bool, desc2Prompt];
 
     if (inputArg == equippedItem[0]){
       equippedItem.pop();
@@ -557,7 +585,7 @@ function controlDrop(inputArg){
     }
     scoreInc(10);
     }else{
-      printLine('No item found with that name')
+      printLine('No item found with that name');
     }
 
 
@@ -629,7 +657,7 @@ function controlAttack(inputArg){
 
 }
 
-function isDark(){
+function isDarkCounter(){
   if('isDark' in currentRoom){
     if (bag.includes('lamp')){
       darkCount = 0;
@@ -642,6 +670,19 @@ function isDark(){
       else{
         return false;
   }}}
+}
+
+function darkCheck(){
+  //if there is lamp in bag, and I'm its isDark is true, the room desc prints the first desc. if the dark is true, but no lamp, desc2, 
+  if ('isDark' in currentRoom){
+  let lampCheck = bag.includes('lamp')
+  if(lampCheck == false && currentRoom.isDark == true){
+    //change desc to dark desc
+    currentRoom.desc[0] = 2;
+  } else if(lampCheck == true)
+    currentRoom.desc[0] = 1;
+
+    }
 }
 
 function killPlayer(){
