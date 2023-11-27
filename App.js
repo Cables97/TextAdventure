@@ -3,7 +3,7 @@ import {roomMaster, enemyMaster, } from './modules/Data.js'
 //Constants
 //------------------------------------------------
 const enemyBank = enemyMaster;
-//const itemBank = itemMaster;
+//const itemBank = itemMaster; --not used
 const roomBank = roomMaster;
 
 //----------------------------------------------- 
@@ -29,16 +29,20 @@ let dummyCommandCount = 0;
 
 let bag = [];
 let equippedItem = [];
+
 let darkCount = 0;
 
 //----------------------------------------------- 
 //Event Functions
 //----------------------------------------------- 
+
+//start game onload
 window.onload = (event) => {
   startGame();
   domInputField.focus();
 };
 
+//clear variables, set room
 function startGame(){
   world = roomBank;
   bag = [];
@@ -62,13 +66,11 @@ domInputField.addEventListener("keydown", function (e) {
 //parses user command, passes it to userCommand
 function userInput(){
   let userCommand = domInputField.value.toLowerCase();
-  console.log("userCommand= " + userCommand)
   domInputField.value = ""
   printLine(userCommand);
   playerController(userCommand);
   
 }
-
 
 //----------------------------------------------- 
 //Game Functions
@@ -100,12 +102,11 @@ function enterRoom(roomName)
 //checks if the room is in world list. Returns availible room by name.
 function findRoom(roomName)
 {
-  //console.log(world);
     for(var r of world)
     {
         if (r.title === roomName)
             return r;
-          //console.log(r);
+
     }
     
     return null;
@@ -124,7 +125,6 @@ function printRoom(){
       //let crItems = currentRoom.items;
       //(crItems.length == 1) ? currentRoom.desc2[0] = 1 : currentRoom.desc2[0] = 2; 
       let descIndex = currentRoom.desc2[0];
-      console.log(descIndex);
       printLine(currentRoom.desc2[descIndex]);
     }
 
@@ -145,16 +145,11 @@ function lockedDoor(inputArg){
   if ('lockedExit' in currentRoom){
   let lockedExits = currentRoom.lockedExit; //[0[0], 0[1]], [1[0], 1[1]],
   let desiredDirection = inputArg;
-  console.log(lockedExits + ' = lockedexits');
-  console.log(desiredDirection + " 1");
   //for every 'locked door' in the current room
   for(let i = 0; i < lockedExits.length; i++){
-    console.log(lockedExits[i]);
       //if the input direction matches where the locked door is
     if (lockedExits[i][0] == desiredDirection){
-      console.log(desiredDirection + " = dd");
       let requiredItem = lockedExits[i][1]
-      console.log('requiredItem = ' + requiredItem)
       //check if they have a matching item to the required item
       if(bag.includes(requiredItem)){
             lockedDoorRemoval(desiredDirection);
@@ -162,7 +157,6 @@ function lockedDoor(inputArg){
             printLine("Key removed from bag")
             return false;
       }else{
-          console.log(desiredDirection + "door is locked");
             return true;
         }
 
@@ -185,9 +179,7 @@ function lockedDoorRemoval(inputArg){
           let keyIndex = bag.indexOf('key');
           bag.slice(keyIndex, 1);
           //remove lockedExit from Room
-          console.log(currentRoom.lockedExit[i] + " has been spliced");
           currentRoom.lockedExit.splice(i, 1);
-          console.log(currentRoom.lockedExit);
       }
     }
     }
@@ -195,7 +187,6 @@ function lockedDoorRemoval(inputArg){
 //looks in room for enemy,
 function findEnemy(enemyName)
 {
-  console.log(enemyBank);
     for(var r of enemyBank)
     {
         if (r.name === enemyName)
@@ -207,9 +198,6 @@ function findEnemy(enemyName)
 
 //mounts enemy that matches from enemybank
 function mountEnemy(enemy){
-  
- 
-    console.log(enemy + " mounted")
     let r = findEnemy(enemy);
     if (!r)
       {
@@ -227,12 +215,8 @@ function mountEnemy(enemy){
 function printEnemy(){
   if(currentRoom.enemy[2] == true){
     printLine(currentRoom.enemy[1]);
-    console.log('enemy alive');
-    console.log(currentRoom.enemy[2]);
   } else if (currentRoom.enemy[2] === false) {
     printLine(currentRoom.enemy[4]);
-    console.log('enemy dead');
-    console.log(currentRoom.enemy[2]);
   }
 }
 
@@ -242,13 +226,13 @@ function killEnemy(){
   if (equippedItem[0] == 'knife'){
     //set isalive value to false
     currentRoom.enemy[2] = false;
-    //console.log(currentRoom.enemy[2]);
+
     //print killing line
     printLine(currentRoom.enemy[3]);
     //add reward to roomitems
-    //console.log(currentEnemy.reward + " " + currentRoom.items); 
+
     currentRoom.items = currentRoom.items.concat(currentEnemy.reward);
-    //console.log(currentRoom.items); 
+
     unmountEnemy();
     printEnemy();
   } else {
@@ -280,13 +264,9 @@ function playerController(input){
     let inputArray = inputstr.split(/\s+/);
   
     let inputCommand = inputArray[0];
-    //console.log("input command= " + inputCommand);
   
     let inputArgument = inputArray[1];
-    //console.log("input argument= " + inputArg);
-  
-    //console.log("dummyCommandCount= " + dummyCommandCount);
-  
+
     switch(inputCommand) {
         //All player commands go within this switch statement. Simplify as much as possible. KISS.
   
@@ -589,8 +569,6 @@ function controlTake(inputArg){
     let x = currentRoom.items.indexOf(inputArg);
     currentRoom.items.splice(x,1);
     printLine('You now have ' + bag + " in your bag");
-    (boolDebug) ? console.log('bag items= ' + bag) : null;
-    (boolDebug) ? console.log('room items= ' + roomItems) : null;
     scoreInc(10);
 
     if(equippedItem.length == 0 && inputArg == 'knife'){
@@ -614,9 +592,6 @@ function controlDrop(inputArg){
     let x = bag.indexOf(inputArg);
     bag.splice(x,1);
     printLine('You have dropped ' + inputArg + " it is no longer in your bag");
-
-    (boolDebug) ? console.log('bag items= ' +bag): null;
-    (boolDebug) ? console.log('room items= ' +roomItems): null;
 
     let desc2Bool = 1 ;
     let desc2Prompt = 'A ' + inputArg + ' lays on the floor by your feet.';
@@ -656,12 +631,9 @@ function controlEquip(inputArg){
 
 }
 
-
 // attack command
 function controlAttack(inputArg){
-  console.log(inputArg + currentEnemy.name);
  if(inputArg == currentEnemy.name){
-  console.log('you attack enemy')
   killEnemy();
  } else{
   printLine("You swing at the air");
@@ -707,11 +679,9 @@ function killPlayer(){
 //debug console, obsolete
 function debugMode(){
   if(!boolDebug){
-    console.log('debug is true');
     boolDebug = true;
     (boolDebug) ? printLine('debug mode activated') : null;
   }else{
-    console.log('debug is false');
     boolDebug = false;
   }
 }
