@@ -13,6 +13,7 @@ const domOutputBox = document.getElementById("outputcontainer");
 const domRoomTitle = document.getElementById("roomTitle");
 const domScoreElem = document.getElementById("score");
 const domInputField = document.getElementById("input");
+const domInputButton = document.getElementById("inputbtn");
 const domConsoleMessage = document.getElementById("inputMessage");
 
 //----------------------------------------------- 
@@ -22,7 +23,7 @@ let world = [];
 let currentEnemy = '';
 let currentRoom ={};
 
-let boolDebug = false;
+let boolDebug = true;
 
 let score = 0;
 let dummyCommandCount = 0;
@@ -53,6 +54,13 @@ function startGame(){
   printHelp();
   enterRoom("StartingRoom");
 }
+
+
+//event on touch listener, takes text in input box and passes it as playerController(input) **for mobile.
+domInputButton.addEventListener("touchstart", function (e) {
+    userInput();
+}
+);
 
 //event on enter listener, takes text in input box and passes it as playerController(input).
 domInputField.addEventListener("keydown", function (e) {
@@ -155,6 +163,7 @@ function lockedDoor(inputArg){
             lockedDoorRemoval(desiredDirection);
             printLine("After unlocking, the key snaps off in the door.")
             printLine("Key removed from bag")
+           
             return false;
       }else{
             return true;
@@ -176,10 +185,14 @@ function lockedDoorRemoval(inputArg){
       //check if they have a matching item to the required item
       if(bag.includes(requiredItem)){
           //remove key from bag
-          let keyIndex = bag.indexOf('key');
-          bag.slice(keyIndex, 1);
+          let x = bag.indexOf('key');
+          bag.splice(x,1);
+
+          console.log('bag= '+ bag);
           //remove lockedExit from Room
           currentRoom.lockedExit.splice(i, 1);
+          console.log(currentRoom.lockedExit);
+          
       }
     }
     }
@@ -366,16 +379,14 @@ function playerController(input){
             printLine('Please input an acceptable command');
             consoleMsg("You're being silly");
             dummyCommandCount++;
-          } else if ( dummyCommandCount === 5){
-            printLine('Please input an acceptable command');
-            consoleMsg('I can not tell if you are dumb or forgot how to play');
-            dummyCommandCount++;
-          } else if ( dummyCommandCount > 6){
+          } else if ( dummyCommandCount >= 6){
+            consoleMsg('Maybe this will help?');
             printHelp();
             dummyCommandCount = 0;
           } else {
             printLine('Please input an acceptable command');
             dummyCommandCount++;
+            consoleMsg("Console <span class='important'>Message");
           }
         break;
       }
@@ -432,13 +443,13 @@ function printIntro(){
 function printHelp(){
   //print controls to game
     
-  printLine("Available commands\n");
+  printLine("Available commands: \n");
   printLine("<span class='important'>newgame</span>             - Start a new game");
   printLine("<span class='important'>help</span>            - Display this help information");
   printLine("<span class='important'>look (target)</span>            - Look in the room");
   printLine("<span class='important'>(go) n/s/w/e / north/south/west/east</span>    - Go in the specified direction. Read room description to understand where you can go.");
   printLine("<span class='important'>take (object)</span>     - Grab specified object from the room");
-  printLine("<span class='important'>drop (object)</span>     - Drop specified object from the bag");
+  printLine("<span class='important'>drop (object)</span>     - Drop specified object from your bag");
   printLine("<span class='important'>bag</span>             - Shows the content of the bag");
   printLine("");
 

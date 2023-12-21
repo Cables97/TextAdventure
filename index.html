@@ -15,25 +15,27 @@
 
     <div class="container">
 
-      <div id="statusBar">
+      <div id="statusBar" class="status-bar">
           <div id="roomTitle">Starting Room</div>
           <div id="score">score: 00</div>
       </div>
 
       <div id="wrapper">
-        <div id='outputcontainer' class="globalPadding">
+        <div id='outputcontainer' class="globalPadding output">
           
         </div>
       </div>
 
-      <div id='console' id="inputcontainer">
+      <div class='console' id="inputcontainer">
 
-        <div id="consoleGrid" class="consoleColour globalPadding">
+        <div id="consoleGrid" class="console-grid consoleColour globalPadding">
           <div>>></div>
-          <input id="input" type="text" class="consoleColour" placeholder="Type a command..." autocomplete="off"></input>
+          <input id="input" type="text" class="input" placeholder="Type a command..." autocomplete="off"></input>
           <div>&nbsp;</div>
-          <div id="inputMessage">Console <span class="important">Message</span></div>
+          <div id="inputMessage" class="input-message">Console <span class="important">Message</span></div>
         </div>
+
+        <div id='inputbtn' class="input-button"><p>enter</p></div>
 
       </div>
 

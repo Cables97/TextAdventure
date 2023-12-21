@@ -10,10 +10,6 @@
   font-family: 'Ubuntu Mono', monospace;
   font-size: 16px;
   box-sizing: border-box;
-  margin: 0;
-  border: 0;
-  padding: 0;
-
 }
 
 html, body{
@@ -23,44 +19,10 @@ html, body{
 .container{
   margin: auto;
   border: .25px solid var(--text-secondary);
-  min-width: 450px;
   width: var(--width);
-  height: 100vh;
-
 }
 
-.consoleColour{
-  background-color: var(--background);
-}
-
-.globalPadding{
-  padding: .5em;
-}
-
-
-.important{
-  font-weight: bold;
-  color: aquamarine;
-}
-
-
-#outputcontainer{
-  height: calc(100vh - 6em);
-  border: .25px solid var(--text-secondary);
-  color: var(--text-main);
-  overflow-x: hidden; 
-  overflow-anchor: none;
-  overflow: auto;
-
-}
-
-#outputcontainer > p{
-  display:block;
-  text-align: left;
-  padding: .25em;
-}
-
-#statusBar{
+.status-bar{
   padding:5px;
   display:flex;
   flex-direction: row;
@@ -72,15 +34,25 @@ html, body{
 
 }
 
-#console{
-  position: fixed;
-  height: 4em;
-  bottom:0;
-  width:var(--width);
+.output{
+  height: calc(100vh - 6em);
   border: .25px solid var(--text-secondary);
+  color: var(--text-main);
+  overflow-x: hidden; 
+  overflow-anchor: none;
+  overflow: auto;
+
+}
+.output > p{
+  display:block;
+  text-align: left;
 }
 
-#consoleGrid{
+
+
+
+
+.console-grid{
   display: grid;
   grid-template-columns: 18px auto;
   grid-gap: .25em;
@@ -88,25 +60,64 @@ html, body{
   color: var(--text-main);
 }
 
-#input{
+
+
+.input{
+  background-color: var(--background);
   color: var(--text-main);
   outline: 0;
+  border: 0;
 }
 
-#inputMessage{
+
+
+
+.important{
+  font-weight: bold;
+  color: aquamarine;
+}
+
+
+.input-message{
   color: var(--text-secondary);
 }
 
+.input-button{
+  height: 3em;
+  width: 6em;
+  background-color: var(--text-main);
+  display: none;
+  text-align: center;
+}
 
+.input-button:hover{
+  background-color: var(--text-secondary);
+}
+
+.input-button > p{
+  margin: .75em auto;
+}
 
 
 @media (max-width:961px)  { /* tablet, landscape iPad, lo-res laptops ands desktops */ 
   :root{
-    --width: 100vw;
+    --width: 96vw;
+  }
+  .console{
+    height: 3em;
+  }
+  .console{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .console-grid{
+    width: calc(96vw - 3em);
+  }
+  .input-button{
+    display:block;
   }
 
-  #outputcontainer > p{
-    padding: .35em;
-  }
+  
 }
 
