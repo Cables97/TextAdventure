@@ -23,7 +23,7 @@ let world = [];
 let currentEnemy = '';
 let currentRoom ={};
 
-let boolDebug = true;
+let boolDebug = false;
 
 let score = 0;
 let dummyCommandCount = 0;
