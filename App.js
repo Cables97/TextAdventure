@@ -55,9 +55,9 @@ function startGame(){
   enterRoom("StartingRoom");
 }
 
-
 //event on touch listener, takes text in input box and passes it as playerController(input) **for mobile.
 domInputButton.addEventListener("touchstart", function (e) {
+    prompt()
     userInput();
 }
 );
@@ -386,7 +386,7 @@ function playerController(input){
           } else {
             printLine('Please input an acceptable command');
             dummyCommandCount++;
-            consoleMsg("Console <span class='important'>Message");
+            consoleMsg("Console <span class='important'>Message</span>");
           }
         break;
       }
